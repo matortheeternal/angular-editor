@@ -1,0 +1,51 @@
+directive-block {
+    width: 100%;
+    border: 1px solid #000;
+    display: block;
+
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px;
+
+        select {
+            flex: 1;
+            margin-right: 16px;
+        }
+
+        button {
+            padding: 2px 6px;
+            font: 16px/1 FontAwesome;
+        }
+    }
+
+    button.preview::before {
+        content: '\f06e';
+    }
+
+    button.code::before {
+        content: '\f121';
+    }
+
+    .content-container {
+        border-top: 1px solid;
+    }
+
+    .delete-block {
+        margin-left: 4px;
+        font: 16px/1 FontAwesome;
+
+        &::before {
+            content: '\f00d';
+        }
+    }
+
+    textarea {
+        display: block;
+        border: none;
+        min-width: 100%;
+        padding: 4px;
+        min-height: 350px;
+    }
+}
