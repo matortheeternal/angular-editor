@@ -5,7 +5,7 @@
     <span class="delete-block"></span>
 </div>
 <div class="content-container">
-    <div ng-hide="showCode"></div>
+    <div ng-hide="showCode" store-element="previewElement"></div>
     <div class="code" ng-show="showCode" contenteditable="true">
         <textarea ng-model="code"></textarea>
     </div>

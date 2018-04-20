@@ -2,7 +2,9 @@ app.directive('directiveBlock', function() {
     return {
         restrict: 'E',
         templateUrl: '../partials/directiveBlock.html',
-        scope: true,
+        scope: {
+            code: '=?'
+        },
         controller: 'directiveBlockController',
         link: function(scope, element) {
             element[0].setAttribute('contenteditable', 'false');
@@ -10,16 +12,10 @@ app.directive('directiveBlock', function() {
     }
 });
 
-app.controller('directiveBlockController', function($scope, $element, $sce, $compile, $timeout) {
-    var previewElement;
-    $scope.code = '';
+app.controller('directiveBlockController', function($scope, $element, $sce, $compile) {
+    if (!$scope.code) $scope.code = '';
     $scope.directives = $scope.$parent.allowedDirectives;
     $scope.showCode = true;
-
-    // helper functions
-    var findPreviewElement = function() {
-        previewElement = $element[0].lastElementChild.firstElementChild;
-    };
 
     // scope functions
     $scope.toggleMode = function() {
@@ -37,12 +33,8 @@ app.controller('directiveBlockController', function($scope, $element, $sce, $com
     });
     
     $scope.$watch('showCode', function() {
-        if ($scope.showCode || !previewElement) return;
-        var e = angular.element(previewElement);
-        e.html($sce.trustAsHtml($scope.code).toString());
-        $compile(e.contents())($scope.$parent);
+        if ($scope.showCode || !$scope.previewElement) return;
+        $scope.previewElement.html($sce.trustAsHtml($scope.code).toString());
+        $compile($scope.previewElement.contents())($scope.$parent);
     });
-
-    // initialization
-    $timeout(findPreviewElement);
 });
