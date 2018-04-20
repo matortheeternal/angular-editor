@@ -1,0 +1,23 @@
+{
+  "name": "angular-editor",
+  "description": "A WYSIWYG HTML Editor using AngularJS.",
+  "version": "1.0.0",
+  "author": "Mator",
+  "homepage": "https://github.com/matortheeternal/angular-editor#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matortheeternal/angular-editor.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "angular": "^1.6.10",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-include": "^2.3.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-zip": "^4.0.0"
+  }
+}
