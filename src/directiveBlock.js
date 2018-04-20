@@ -4,7 +4,7 @@ app.directive('directiveBlock', function() {
         templateUrl: '../partials/directiveBlock.html',
         scope: true,
         controller: 'directiveBlockController',
-        link: function(scope, element, attrs) {
+        link: function(scope, element) {
             element[0].setAttribute('contenteditable', 'false');
         }
     }
