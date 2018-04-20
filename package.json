@@ -10,7 +10,8 @@
     "url": "git+https://github.com/matortheeternal/angular-editor.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp build",
+    "release": "gulp release"
   },
   "devDependencies": {
     "angular": "^1.6.10",
