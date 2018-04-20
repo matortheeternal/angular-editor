@@ -1,0 +1,12 @@
+<div class="top-bar">
+    <select ng-model="activeDirective" ng-options="item as item.name for item in availableDirectives"></select>
+    <button class="{{showCode ? 'preview' : 'code'}}" ng-click="toggleMode()"></button>
+    
+    <span class="delete-block"></span>
+</div>
+<div class="content-container">
+    <div ng-hide="showCode"></div>
+    <div class="code" ng-show="showCode" contenteditable="true">
+        <textarea ng-model="code"></textarea>
+    </div>
+</div>
