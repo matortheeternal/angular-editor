@@ -1,0 +1,18 @@
+editor {
+  display: block;
+
+  > * {
+    box-sizing: border-box;
+  }
+
+  .editor {
+    border: 1px solid #eee;
+    padding: 6px 12px 10px;
+  }
+
+  > textarea {
+    min-width: 100%;
+    max-width: 100%;
+    padding: 6px 12px;
+  }
+}

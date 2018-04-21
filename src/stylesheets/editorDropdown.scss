@@ -1,0 +1,41 @@
+editor-dropdown {
+  display: inline-block;
+
+  .selected-item {
+    @include dropdown-triangle(10px);
+    padding: 6px 12px;
+  }
+
+  .dropdown {
+    left: -1px;
+    top: 27px;
+    position: absolute;
+    background: #fff;
+    padding: 4px;
+    border: 1px solid;
+    white-space: nowrap;
+    z-index: 10;
+    text-align: center;
+
+    > div {
+      border-bottom: 1px solid;
+      padding: 8px;
+
+      &:hover {
+        background: #ddd;
+      }
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+
+      > * {
+        margin: 0;
+      }
+    }
+  }
+
+  &.style-dropdown {
+    min-width: 148px;
+  }
+}
