@@ -26,11 +26,13 @@ directive-block {
     padding: 4px;
     border: 1px solid #ccc;
     visibility: hidden;
-    background: #f0f0f0;
+    background: #fff;
     position: absolute;
     z-index: 1;
     right: -5px;
-    top: -35px;
+    top: -38px;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
 
     select {
       margin-left: 8px;
