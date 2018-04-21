@@ -34,12 +34,6 @@ app.service('editorActionService', function(editorStyleService) {
             }
         }, {
             display: 'button',
-            class: 'fa fa-strikethrough',
-            callback: function(selection) {
-                // TODO
-            }
-        }, {
-            display: 'button',
             class: 'fa fa-list-ul',
             callback: function(selection) {
                 // TODO
@@ -58,7 +52,7 @@ app.service('editorActionService', function(editorStyleService) {
             }
         }, {
             display: 'button',
-            class: 'fa fa-redo',
+            class: 'fa fa-repeat',
             callback: function(selection) {
                 // TODO
             }
