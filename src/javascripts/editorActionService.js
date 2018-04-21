@@ -13,35 +13,35 @@ app.service('editorActionService', function(editorStyleService, selectionService
             title: 'Bold',
             display: 'button',
             class: 'fa fa-bold',
-            callback: function() {
-                selectionService.wrapSelectionInTag('b');
+            callback: function(editorElement) {
+                selectionService.applyTag('B', editorElement);
             }
         }, {
             title: 'Italic',
             display: 'button',
             class: 'fa fa-italic',
-            callback: function() {
-                selectionService.wrapSelectionInTag('i');
+            callback: function(editorElement) {
+                selectionService.applyTag('I', editorElement);
             }
         }, {
             title: 'Underline',
             display: 'button',
             class: 'fa fa-underline',
-            callback: function() {
-                selectionService.wrapSelectionInTag('u');
+            callback: function(editorElement) {
+                selectionService.applyTag('U', editorElement);
             }
         }, {
             title: 'Strikethrough',
             display: 'button',
             class: 'fa fa-strikethrough',
-            callback: function() {
-                selectionService.wrapSelectionInTag('s');
+            callback: function(editorElement) {
+                selectionService.applyTag('S', editorElement);
             }
         }, {
             title: 'Unordered list',
             display: 'button',
             class: 'fa fa-list-ul',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
                 //selectionService.wrapSelectionInTag('ul');
             }
@@ -49,7 +49,7 @@ app.service('editorActionService', function(editorStyleService, selectionService
             title: 'Ordered list',
             display: 'button',
             class: 'fa fa-list-ol',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
                 //selectionService.wrapSelectionInTag('ol');
             }
@@ -57,21 +57,21 @@ app.service('editorActionService', function(editorStyleService, selectionService
             title: 'Undo',
             display: 'button',
             class: 'fa fa-undo',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Redo',
             display: 'button',
             class: 'fa fa-repeat',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Clear formatting',
             display: 'button',
             class: 'fa fa-ban',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }]
@@ -82,42 +82,42 @@ app.service('editorActionService', function(editorStyleService, selectionService
             title: 'Align left',
             display: 'button',
             class: 'fa fa-align-left',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Align center',
             display: 'button',
             class: 'fa fa-align-center',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Align right',
             display: 'button',
             class: 'fa fa-align-right',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Justify',
             display: 'button',
             class: 'fa fa-align-justify',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Increase indent',
             display: 'button',
             class: 'fa fa-indent',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Decrease indent',
             display: 'button',
             class: 'fa fa-dedent',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }]
@@ -128,35 +128,35 @@ app.service('editorActionService', function(editorStyleService, selectionService
             title: 'Toggle HTML / Rich Text',
             display: 'button',
             class: 'fa fa-code',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Insert image',
             display: 'button',
             class: 'fa fa-image',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }, {
             title: 'Insert / edit link',
             display: 'button',
             class: 'fa fa-link',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         },  {
             title: 'Insert video',
             display: 'button',
             class: 'fa fa-youtube-play',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         },{
             title: 'Insert template',
             display: 'button',
             class: 'fa fa-cube',
-            callback: function() {
+            callback: function(editorElement) {
                 // TODO
             }
         }]

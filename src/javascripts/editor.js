@@ -46,12 +46,12 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
 
     // scope functions
     $scope.invokeAction = function(action) {
-        action.callback();
+        action.callback($scope.editor);
     };
 
     $scope.selectChanged = function(action) {
         if (!action.activeOption) return;
-        action.activeOption.callback();
+        action.activeOption.callback($scope.editor);
     };
 
     // event handlers
