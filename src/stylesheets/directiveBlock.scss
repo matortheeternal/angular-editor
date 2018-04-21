@@ -23,7 +23,7 @@ directive-block {
   .top-bar {
     display: inline-flex;
     align-items: center;
-    padding: 4px;
+    padding: 4px 4px 4px 8px;
     border: 1px solid #ccc;
     visibility: hidden;
     background: #fff;
@@ -33,6 +33,8 @@ directive-block {
     top: -38px;
     border-radius: 4px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
+    cursor: default;
+    user-select: none;
 
     select {
       margin-left: 8px;
@@ -61,6 +63,7 @@ directive-block {
   }
 
   .delete-block {
+    cursor: pointer;
     margin-left: 4px;
     font: 16px/1 FontAwesome;
 
