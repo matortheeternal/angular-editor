@@ -4,9 +4,15 @@ const fs = require('fs'),
       include = require('gulp-include'),
       watch = require('gulp-watch'),
       sass = require('gulp-sass'),
+      batch = require('gulp-batch'),
       zip = require('gulp-zip');
 
-var build = function() {
+gulp.task('clean', function() {
+    return gulp.src('dist', {read: false})
+        .pipe(clean());
+});
+
+gulp.task('build', ['clean'], function() {
     gulp.src('index.js')
         .pipe(include())
         .on('error', console.log)
@@ -15,14 +21,7 @@ var build = function() {
     gulp.src('index.scss')
         .pipe(sass()).on('error', sass.logError)
         .pipe(gulp.dest('dist'));
-};
-
-gulp.task('clean', function() {
-    return gulp.src('dist', {read: false})
-        .pipe(clean());
 });
-
-gulp.task('build', ['clean'], build);
 
 gulp.task('release', function() {
     // noinspection JSAnnotator
@@ -38,7 +37,10 @@ gulp.task('release', function() {
 });
 
 gulp.task('watch', function() {
-    return watch(['index.js', 'index.scss', 'src/**/*.js'], build);
+    return watch(['index.js', 'index.scss', 'src/javascripts/**/*.js', 
+        'src/stylesheets/**/*.scss'], batch(function(events, done) {
+            gulp.start('build', done);
+        }));
 });
 
 gulp.task('default', ['build']);
