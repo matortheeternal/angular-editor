@@ -28,10 +28,9 @@ directive-block {
     }
 
     .content-container {
-      outline-color: rgb(77, 144, 254); // #4D90FE
-      outline-offset: -2px;
-      outline-style: auto;
-      outline-width: 5px;
+      outline: #4d90fe auto;
+      margin: -2px -4px;
+      padding: 2px 4px;
     }
   }
 
@@ -48,7 +47,7 @@ directive-block {
     background: #f0f0f0;
     position: absolute;
     z-index: 1;
-    right: 0;
+    right: -5px;
     top: -35px;
 
     select {
@@ -95,7 +94,7 @@ test-directive {
 
 editor-toolbar {
   display: flex;
-  background: #ccc;
+  background: #eee;
   padding: 10px 5px;
   border-bottom: none;
 
@@ -216,8 +215,8 @@ editor {
   }
 
   .editor {
-    border: 1px solid #ccc;
-    padding: 6px 12px;
+    border: 1px solid #eee;
+    padding: 6px 12px 10px;
   }
 
   textarea {
