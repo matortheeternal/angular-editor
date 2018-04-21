@@ -18,18 +18,42 @@
 
 directive-block {
   width: 100%;
-  border: 1px solid #000;
   display: block;
+  position: relative;
+  outline: none !important;
+
+  &.focused {
+    .top-bar {
+      visibility: visible;
+    }
+
+    .content-container {
+      outline-color: rgb(77, 144, 254); // #4D90FE
+      outline-offset: -2px;
+      outline-style: auto;
+      outline-width: 5px;
+    }
+  }
+
+  .preview {
+    user-select: none;
+  }
 
   .top-bar {
-    display: flex;
-    justify-content: space-between;
+    display: inline-flex;
     align-items: center;
     padding: 4px;
+    border: 1px solid #ccc;
+    visibility: hidden;
+    background: #f0f0f0;
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    top: -35px;
 
     select {
-      flex: 1;
       margin-right: 16px;
+      min-width: 300px;
     }
 
     button {
@@ -44,10 +68,6 @@ directive-block {
 
   button.code::before {
     content: '\f121';
-  }
-
-  .content-container {
-    border-top: 1px solid;
   }
 
   .delete-block {
@@ -66,6 +86,10 @@ directive-block {
     padding: 4px;
     min-height: 350px;
   }
+}
+
+test-directive {
+  display: inline-block;
 }
 
 editor-toolbar {

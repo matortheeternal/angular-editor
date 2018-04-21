@@ -1,4 +1,11 @@
 app.directive('directiveBlock', function() {
+    var elementIsChild = function(element, parent) {
+        while (element) {
+            if (element === parent) return true;
+            element = element.parentNode;
+        }
+    };
+
     return {
         restrict: 'E',
         templateUrl: '../partials/directiveBlock.html',
@@ -7,15 +14,40 @@ app.directive('directiveBlock', function() {
         },
         controller: 'directiveBlockController',
         link: function(scope, element) {
+            var focused = false;
+
+            var clickHandler = function(e) {
+                if (!focused) return;
+                if (elementIsChild(e.target, element[0])) return;
+                setFocused(false);
+            };
+
+            var setFocused = function(b) {
+                if (focused === b) return;
+                focused = b;
+                var method = b ? 'add' : 'remove';
+                element[0].classList[method]('focused');
+                window[method + 'EventListener']('click', clickHandler);
+            };
+
             element[0].setAttribute('contenteditable', 'false');
+            element[0].setAttribute('tabindex', '0');
+
+            element[0].addEventListener('click', function() {
+                setFocused(true);
+            });
+
+            scope.$on('destroy', function() {
+                setFocused(false);
+            });
         }
     }
 });
 
-app.controller('directiveBlockController', function($scope, $element, $sce, $compile) {
+app.controller('directiveBlockController', function($scope, $sce, $compile) {
     if (!$scope.code) $scope.code = '';
     $scope.directives = $scope.$parent.allowedDirectives;
-    $scope.showCode = true;
+    $scope.showCode = false;
 
     // scope functions
     $scope.toggleMode = function() {
