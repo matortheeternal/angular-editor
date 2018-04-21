@@ -44,10 +44,21 @@ app.directive('directiveBlock', function() {
     }
 });
 
-app.controller('directiveBlockController', function($scope, $sce, $compile) {
+app.controller('directiveBlockController', function($scope, $sce, $compile, directiveService) {
     if (!$scope.code) $scope.code = '';
-    $scope.directives = $scope.$parent.allowedDirectives;
+    $scope.directives = directiveService.availableDirectives;
     $scope.showCode = false;
+    var foundDirective;
+
+    // helper functions
+    var determineActiveDirective = function() {
+        var directiveElement = $scope.previewElement[0].firstElementChild,
+            tagName = directiveElement.tagName.toLowerCase();
+        $scope.activeDirective = $scope.directives.find(function(d) {
+            foundDirective = d.tagName === tagName;
+            return foundDirective;
+        });
+    };
 
     // scope functions
     $scope.toggleMode = function() {
@@ -57,7 +68,11 @@ app.controller('directiveBlockController', function($scope, $sce, $compile) {
     // event handlers
     $scope.$watch('activeDirective', function() {
         if (!$scope.activeDirective) return;
-        $scope.code = $scope.activeDirective.code;
+        if (foundDirective) {
+            foundDirective = false;
+        } else {
+            $scope.code = $scope.activeDirective.code;
+        }
     });
     
     $scope.$watch('code', function() {
@@ -68,5 +83,6 @@ app.controller('directiveBlockController', function($scope, $sce, $compile) {
         if ($scope.showCode || !$scope.previewElement) return;
         $scope.previewElement.html($sce.trustAsHtml($scope.code).toString());
         $compile($scope.previewElement.contents())($scope.$parent);
+        if (!$scope.activeDirective) determineActiveDirective();
     });
 });
