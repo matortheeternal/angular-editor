@@ -8,7 +8,7 @@ app.directive('directiveBlock', function() {
 
     return {
         restrict: 'E',
-        templateUrl: '../partials/directiveBlock.html',
+        templateUrl: '../../partials/directiveBlock.html',
         scope: {
             index: '='
         },
