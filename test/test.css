@@ -2,3 +2,7 @@ body {
     margin: 16px auto;
     max-width: 1000px;
 }
+
+test-directive {
+    display: inline-block;
+}
