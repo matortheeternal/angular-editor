@@ -1,10 +1,8 @@
 <div class="action-group" ng-repeat="group in actionGroups">
-    <div class="action" ng-repeat="action in group">
-        <button ng-if="::action.display === 'button'" ng-click="invokeAction(action)" class="{{::action.class}}"></button>
-        <editor-dropdown ng-if="::action.display === 'dropdown'" ng-model="action.activeOption" class="{{::action.class}}" on-change="selectChanged(action)">
-        </editor-dropdown>
-        <div ng-if="::action.display === 'div'" class="{{::action.class}}">
-            {{action.content}}
-        </div>
+    <button ng-repeat-start="action in group.actions" ng-if="::action.display === 'button'" ng-click="invokeAction(action)" class="action {{::action.class}}"></button>
+    <editor-dropdown ng-if="::action.display === 'dropdown'" class="action {{::action.class}}">
+    </editor-dropdown>
+    <div ng-repeat-end ng-if="::action.display === 'div'" class="action {::action.class}}">
+        {{action.content}}
     </div>
 </div>
