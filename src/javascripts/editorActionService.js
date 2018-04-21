@@ -1,4 +1,4 @@
-app.service('editorActionService', function(editorStyleService) {
+app.service('editorActionService', function(editorStyleService, selectionService) {
     var styleGroup = {
         actions: [{
             title: 'Style',
@@ -13,63 +13,65 @@ app.service('editorActionService', function(editorStyleService) {
             title: 'Bold',
             display: 'button',
             class: 'fa fa-bold',
-            callback: function(selection) {
-                // TODO
+            callback: function() {
+                selectionService.wrapSelectionInTag('b');
             }
         }, {
             title: 'Italic',
             display: 'button',
             class: 'fa fa-italic',
-            callback: function(selection) {
-                // TODO
+            callback: function() {
+                selectionService.wrapSelectionInTag('i');
             }
         }, {
             title: 'Underline',
             display: 'button',
             class: 'fa fa-underline',
-            callback: function(selection) {
-                // TODO
+            callback: function() {
+                selectionService.wrapSelectionInTag('u');
             }
         }, {
             title: 'Strikethrough',
             display: 'button',
             class: 'fa fa-strikethrough',
-            callback: function(selection) {
-                // TODO
+            callback: function() {
+                selectionService.wrapSelectionInTag('s');
             }
         }, {
             title: 'Unordered list',
             display: 'button',
             class: 'fa fa-list-ul',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
+                //selectionService.wrapSelectionInTag('ul');
             }
         }, {
             title: 'Ordered list',
             display: 'button',
             class: 'fa fa-list-ol',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
+                //selectionService.wrapSelectionInTag('ol');
             }
         }, {
             title: 'Undo',
             display: 'button',
             class: 'fa fa-undo',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Redo',
             display: 'button',
             class: 'fa fa-repeat',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Clear formatting',
             display: 'button',
             class: 'fa fa-ban',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }]
@@ -80,42 +82,42 @@ app.service('editorActionService', function(editorStyleService) {
             title: 'Align left',
             display: 'button',
             class: 'fa fa-align-left',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Align center',
             display: 'button',
             class: 'fa fa-align-center',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Align right',
             display: 'button',
             class: 'fa fa-align-right',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Justify',
             display: 'button',
             class: 'fa fa-align-justify',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Increase indent',
             display: 'button',
             class: 'fa fa-indent',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Decrease indent',
             display: 'button',
             class: 'fa fa-dedent',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }]
@@ -126,35 +128,35 @@ app.service('editorActionService', function(editorStyleService) {
             title: 'Toggle HTML / Rich Text',
             display: 'button',
             class: 'fa fa-code',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Insert image',
             display: 'button',
             class: 'fa fa-image',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }, {
             title: 'Insert / edit link',
             display: 'button',
             class: 'fa fa-link',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         },  {
             title: 'Insert video',
             display: 'button',
             class: 'fa fa-youtube-play',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         },{
             title: 'Insert template',
             display: 'button',
             class: 'fa fa-cube',
-            callback: function(selection) {
+            callback: function() {
                 // TODO
             }
         }]
