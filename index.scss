@@ -52,8 +52,9 @@ directive-block {
     top: -35px;
 
     select {
+      margin-left: 8px;
       margin-right: 16px;
-      min-width: 300px;
+      min-width: 200px;
     }
 
     button {
@@ -84,7 +85,7 @@ directive-block {
     border: none;
     min-width: 100%;
     padding: 4px;
-    min-height: 350px;
+    min-height: 60px;
   }
 }
 

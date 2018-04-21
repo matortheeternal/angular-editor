@@ -1,4 +1,5 @@
 <div class="top-bar">
+    <span>Directive</span>
     <select ng-model="activeDirective" ng-options="item as item.name for item in availableDirectives"></select>
     <button class="{{showCode ? 'preview' : 'code'}}" ng-click="toggleMode()"></button>
     
