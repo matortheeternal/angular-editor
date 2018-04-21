@@ -119,6 +119,7 @@ app.service('selectionService', function() {
             g.selections.forEach(function(s) {
                 var p = s.target.parentNode;
                 if (!p) return;
+                // TODO: Handle partial unwrapping
                 if (p === editorElement) {
                     var e = document.createElement('p');
                     e.innerHTML = s.target.innerHTML;
