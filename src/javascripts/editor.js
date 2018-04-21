@@ -16,10 +16,6 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
     var directiveExpr = /<!-- START DIRECTIVE -->([\s\S]*)<!-- END DIRECTIVE -->/g;
 
     // helper function
-    var getCurrentSelection = function() {
-        // TODO
-    };
-
     var processDirectives = function() {
         $scope.directiveSources = [];
         return $scope.text.replace(directiveExpr, function(match, code) {
@@ -50,12 +46,12 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
 
     // scope functions
     $scope.invokeAction = function(action) {
-        action.callback(getCurrentSelection());
+        action.callback();
     };
 
     $scope.selectChanged = function(action) {
         if (!action.activeOption) return;
-        action.activeOption.callback(getCurrentSelection());
+        action.activeOption.callback();
     };
 
     // event handlers
