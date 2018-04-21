@@ -2,12 +2,13 @@
     <span>Directive</span>
     <select ng-model="activeDirective" ng-options="item as item.name for item in directives"></select>
     <button class="{{showCode ? 'preview' : 'code'}}" ng-click="toggleMode()"></button>
-    
-    <span class="delete-block"></span>
+    <button class="escape" ng-click="escape()" title="Escape directive"></button>
+
+    <span class="delete-block" ng-click="delete()" title="Delete directive"></span>
 </div>
 <div class="content-container">
     <div class="preview" ng-hide="showCode" store-element="previewElement"></div>
-    <div class="code" ng-show="showCode" contenteditable="true">
+    <div class="code" ng-show="showCode">
         <textarea ng-model="code"></textarea>
     </div>
 </div>

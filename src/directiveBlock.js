@@ -10,7 +10,7 @@ app.directive('directiveBlock', function() {
         restrict: 'E',
         templateUrl: '../partials/directiveBlock.html',
         scope: {
-            code: '=?'
+            index: '='
         },
         controller: 'directiveBlockController',
         link: function(scope, element) {
@@ -44,10 +44,7 @@ app.directive('directiveBlock', function() {
     }
 });
 
-app.controller('directiveBlockController', function($scope, $sce, $compile, directiveService) {
-    if (!$scope.code) $scope.code = '';
-    $scope.directives = directiveService.availableDirectives;
-    $scope.showCode = false;
+app.controller('directiveBlockController', function($scope, $sce, $compile, $timeout, directiveService) {
     var foundDirective;
 
     // helper functions
@@ -63,6 +60,16 @@ app.controller('directiveBlockController', function($scope, $sce, $compile, dire
     // scope functions
     $scope.toggleMode = function() {
         $scope.showCode = !$scope.showCode;
+    };
+
+    $scope.delete = function() {
+        $scope.$emit('delete', $scope.index);
+    };
+
+    $scope.escape = function() {
+        $timeout(function() {
+            $scope.$emit('escape', $scope.index);
+        });
     };
 
     // event handlers
@@ -85,4 +92,9 @@ app.controller('directiveBlockController', function($scope, $sce, $compile, dire
         $compile($scope.previewElement.contents())($scope.$parent);
         if (!$scope.activeDirective) determineActiveDirective();
     });
+
+    // initialization
+    $scope.directives = directiveService.availableDirectives;
+    $scope.showCode = false;
+    $scope.code = $scope.$parent.directiveSources[$scope.index];
 });

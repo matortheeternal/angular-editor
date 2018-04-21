@@ -57,6 +57,8 @@ directive-block {
     }
 
     button {
+      cursor: pointer;
+      margin-left: 4px;
       padding: 2px 6px;
       font: 16px/1 FontAwesome;
     }
@@ -68,6 +70,10 @@ directive-block {
 
   button.code::before {
     content: '\f121';
+  }
+
+  button.escape::before {
+    content: '\f112';
   }
 
   .delete-block {
@@ -85,6 +91,7 @@ directive-block {
     min-width: 100%;
     padding: 4px;
     min-height: 60px;
+    outline: none !important;
   }
 }
 
@@ -219,7 +226,7 @@ editor {
     padding: 6px 12px 10px;
   }
 
-  textarea {
+  > textarea {
     min-width: 100%;
     max-width: 100%;
     padding: 6px 12px;

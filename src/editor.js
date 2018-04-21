@@ -24,14 +24,28 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         $scope.directiveSources = [];
         return $scope.text.replace(directiveExpr, function(match, code) {
             var index = $scope.directiveSources.push(code.trim()) - 1;
-            return '<directive-block code="directiveSources[' + index +
-                ']"></directive-block>';
+            return '<directive-block index="' + index +
+                '"></directive-block>';
         });
     };
 
     var getPreviewHtml = function() {
         var html = processDirectives();
         return $sce.trustAsHtml(html).toString();
+    };
+
+    var updateEditorHtml = function() {
+        $scope.editor.html(getPreviewHtml());
+        $compile($scope.editor.contents())($scope);
+    };
+
+    var focusNode = function(node) {
+        var range = document.createRange();
+        var sel = window.getSelection();
+        range.setStart(node, 0);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
     };
 
     // scope functions
@@ -45,8 +59,23 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
     };
 
     // event handlers
-    $scope.$watch('text', function() {
-        $scope.editor.html(getPreviewHtml());
-        $compile($scope.editor.contents())($scope);
+    $scope.$watch('text', updateEditorHtml);
+
+    $scope.$on('escape', function(e, index) {
+        e.stopPropagation();
+        var block = $scope.editor.find('directive-block')[index],
+            nextSibling = block.nextElementSibling;
+        if (!nextSibling) {
+            nextSibling = document.createElement('p');
+            nextSibling.innerHTML = '&nbsp;';
+            block.parentNode.appendChild(nextSibling);
+        }
+        nextSibling.click();
+        focusNode(nextSibling);
+    });
+
+    $scope.$on('delete', function(e, index) {
+        e.stopPropagation();
+        $scope.editor.find('directive-block')[index].remove();
     });
 });
