@@ -13,6 +13,7 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;
     if (!$scope.text) $scope.text = '';
+    var directiveExpr = /<!-- START DIRECTIVE -->([\s\S]*)<!-- END DIRECTIVE -->/g;
 
     // helper function
     var getCurrentSelection = function() {
@@ -21,13 +22,11 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
 
     var processDirectives = function() {
         $scope.directiveSources = [];
-        var tokens = $scope.text.split(/<!-- (START|END) DIRECTIVE -->/);
-        return tokens.reduce(function(html, token, index) {
-            if (index % 2 === 0) return html + token;
-            var sourceIndex = $scope.directiveSources.push(token) - 1;
-            return html + '<directive-block code="directiveSources[' +
-                sourceIndex + ']"></directive-block>';
-        }, '');
+        return $scope.text.replace(directiveExpr, function(match, code) {
+            var index = $scope.directiveSources.push(code.trim()) - 1;
+            return '<directive-block code="directiveSources[' + index +
+                ']"></directive-block>';
+        });
     };
 
     var getPreviewHtml = function() {
