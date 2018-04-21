@@ -37,7 +37,7 @@ gulp.task('release', function() {
 });
 
 gulp.task('watch', function() {
-    return watch(['index.js', 'index.scss', 'src/javascripts/**/*.js', 
+    watch(['index.js', 'index.scss', 'src/javascripts/**/*.js',
         'src/stylesheets/**/*.scss'], batch(function(events, done) {
             gulp.start('build', done);
         }));
