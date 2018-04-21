@@ -1,0 +1,6 @@
+<div class="selected-item" ng-click="toggleDropdown()">
+    {{action.activeItem.label}}
+</div>
+<div class="dropdown" ng-show="showDropdown">
+    <div ng-repeat="item in action.options" ng-bind-html="item.preview" ng-click="selectItem(item)"></div>
+</div>
