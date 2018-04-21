@@ -70,17 +70,94 @@ app.service('editorActionService', function(editorStyleService) {
             display: 'button',
             class: 'fa fa-ban',
             callback: function(selection) {
-                // TODO: Clear formatting
+                // TODO
             }
         }]
     };
 
     var alignmentGroup = {
-        actions: [] // TODO
+        actions: [ {
+            title: 'Align left',
+            display: 'button',
+            class: 'fa fa-align-left',
+            callback: function(selection) {
+                // TODO
+            }
+        }, {
+            title: 'Align center',
+            display: 'button',
+            class: 'fa fa-align-center',
+            callback: function(selection) {
+                // TODO
+            }
+        }, {
+            title: 'Align right',
+            display: 'button',
+            class: 'fa fa-align-right',
+            callback: function(selection) {
+                // TODO
+            }
+        }, {
+            title: 'Justify',
+            display: 'button',
+            class: 'fa fa-align-justify',
+            callback: function(selection) {
+                // TODO
+            }
+        }, {
+            title: 'Increase indent',
+            display: 'button',
+            class: 'fa fa-indent',
+            callback: function(selection) {
+                // TODO
+            }
+        }, {
+            title: 'Decrease indent',
+            display: 'button',
+            class: 'fa fa-dedent',
+            callback: function(selection) {
+                // TODO
+            }
+        }]
     };
 
     var specialGroup = {
-        actions: [] // TODO
+        actions: [{
+            title: 'Toggle HTML / Rich Text',
+            display: 'button',
+            class: 'fa fa-code',
+            callback: function(selection) {
+                // TODO
+            }
+        }, {
+            title: 'Insert image',
+            display: 'button',
+            class: 'fa fa-image',
+            callback: function(selection) {
+                // TODO
+            }
+        }, {
+            title: 'Insert / edit link',
+            display: 'button',
+            class: 'fa fa-link',
+            callback: function(selection) {
+                // TODO
+            }
+        },  {
+            title: 'Insert video',
+            display: 'button',
+            class: 'fa fa-youtube-play',
+            callback: function(selection) {
+                // TODO
+            }
+        },{
+            title: 'Insert template',
+            display: 'button',
+            class: 'fa fa-cube',
+            callback: function(selection) {
+                // TODO
+            }
+        }]
     };
 
     this.groups = [styleGroup, formatGroup, alignmentGroup, specialGroup];
