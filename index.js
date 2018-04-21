@@ -1,2 +1,2 @@
 var app = angular.module('angular-editor', []);
-//= require src/*.js
+//= require src/javascripts/*.js
