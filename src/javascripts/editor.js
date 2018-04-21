@@ -9,7 +9,7 @@ app.directive('editor', function() {
     }
 });
 
-app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService) {
+app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, hotkeyService) {
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;
     if (!$scope.text) $scope.text = '';
@@ -46,7 +46,7 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
 
     // scope functions
     $scope.invokeAction = function(action) {
-        action.callback($scope.editor);
+        return action.callback($scope.editor);
     };
 
     $scope.selectChanged = function(action) {
@@ -74,4 +74,17 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         e.stopPropagation();
         $scope.editor.find('directive-block')[index].remove();
     });
+
+    // initialization
+    var hotkeys = [];
+
+    $scope.actionGroups.forEach(function(group) {
+        group.actions.forEach(function(action) {
+            if (!action.hotkey) return;
+            hotkeyService.addHotkey(hotkeys, action);
+        });
+    });
+
+    console.log(hotkeys);
+    $scope.onKeyDown = hotkeyService.buildOnKeyDown(hotkeys, $scope.invokeAction);
 });
