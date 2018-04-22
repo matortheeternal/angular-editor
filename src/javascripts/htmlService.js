@@ -20,9 +20,11 @@ app.service('htmlService', function(selectionService) {
                     end = s.end || len,
                     newNode = document.createElement(tagName),
                     f = document.createDocumentFragment(),
-                    html = [s.node.substringData(start, end)];
-                combineTag(html, s.node.previousSibling, tagName, 'unshift');
-                combineTag(html, s.node.nextSibling, tagName, 'push');
+                    html = [s.node.substringData(start, end - start)];
+                if (start === 0)
+                    combineTag(html, s.node.previousSibling, tagName, 'unshift');
+                if (end === len)
+                    combineTag(html, s.node.nextSibling, tagName, 'push');
                 if (start > 0) f.appendChild(createTextNode(s.node, 0, start));
                 newNode.innerHTML = html.join('');
                 newNode.normalize();

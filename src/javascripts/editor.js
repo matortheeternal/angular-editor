@@ -10,6 +10,7 @@ app.directive('editor', function() {
 });
 
 app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, hotkeyService) {
+    // initialization
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;
     if (!$scope.text) $scope.text = '';
@@ -44,6 +45,21 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         sel.addRange(range);
     };
 
+    var loadHotkeys = function() {
+        var hotkeys = [];
+        $scope.actionGroups.forEach(function(group) {
+            group.actions.forEach(function(action) {
+                if (!action.hotkey) return;
+                hotkeyService.addHotkey(hotkeys, action);
+            });
+        });
+        return hotkeys;
+    };
+
+    var updateSelectionState = function() {
+        // TODO
+    };
+
     // scope functions
     $scope.invokeAction = function(action) {
         return action.callback($scope.editor);
@@ -55,6 +71,9 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
     };
 
     // event handlers
+    $scope.onKeyUp = updateSelectionState;
+    $scope.onMouseUp = updateSelectionState;
+
     $scope.$watch('text', updateEditorHtml);
 
     $scope.$on('escape', function(e, index) {
@@ -76,15 +95,6 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
     });
 
     // initialization
-    var hotkeys = [];
-
-    $scope.actionGroups.forEach(function(group) {
-        group.actions.forEach(function(action) {
-            if (!action.hotkey) return;
-            hotkeyService.addHotkey(hotkeys, action);
-        });
-    });
-
-    console.log(hotkeys);
-    $scope.onKeyDown = hotkeyService.buildOnKeyDown(hotkeys, $scope.invokeAction);
+    var buildOnKeyDown = hotkeyService.buildOnKeyDown;
+    $scope.onKeyDown = buildOnKeyDown(loadHotkeys(), $scope.invokeAction);
 });

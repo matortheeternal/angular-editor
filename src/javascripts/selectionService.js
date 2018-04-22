@@ -7,9 +7,12 @@ app.service('selectionService', function() {
     };
 
     var addSelections = function(node, selections) {
-        if (node.nodeType === 3) return selections.push({ node: node });
-        for (var i = 0; i < node.childNodes.length; i++)
-            addSelections(node.childNodes[i], selections);
+        if (node.nodeType === 3) {
+            selections.push({ node: node });
+        } else {
+            for (var i = 0; i < node.childNodes.length; i++)
+                addSelections(node.childNodes[i], selections);
+        }
         return selections;
     };
 

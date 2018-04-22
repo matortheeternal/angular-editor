@@ -1,4 +1,4 @@
-app.service('editorActionService', function(editorStyleService, selectionService) {
+app.service('editorActionService', function(editorStyleService, htmlService) {
     var styleGroup = {
         actions: [{
             title: 'Style',
@@ -15,7 +15,7 @@ app.service('editorActionService', function(editorStyleService, selectionService
             class: 'fa fa-bold',
             hotkey: 'Ctrl + B',
             callback: function(editorElement) {
-                selectionService.applyTag('B', editorElement);
+                htmlService.applyTag('B', editorElement);
                 return true;
             }
         }, {
@@ -24,7 +24,7 @@ app.service('editorActionService', function(editorStyleService, selectionService
             class: 'fa fa-italic',
             hotkey: 'Ctrl + I',
             callback: function(editorElement) {
-                selectionService.applyTag('I', editorElement);
+                htmlService.applyTag('I', editorElement);
                 return true;
             }
         }, {
@@ -33,7 +33,7 @@ app.service('editorActionService', function(editorStyleService, selectionService
             class: 'fa fa-underline',
             hotkey: 'Ctrl + U',
             callback: function(editorElement) {
-                selectionService.applyTag('U', editorElement);
+                htmlService.applyTag('U', editorElement);
                 return true;
             }
         }, {
@@ -42,7 +42,7 @@ app.service('editorActionService', function(editorStyleService, selectionService
             class: 'fa fa-strikethrough',
             hotkey: 'Ctrl + Alt + T',
             callback: function(editorElement) {
-                selectionService.applyTag('S', editorElement);
+                htmlService.applyTag('S', editorElement);
                 return true;
             }
         }, {
