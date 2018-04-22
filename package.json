@@ -11,7 +11,9 @@
   },
   "scripts": {
     "build": "gulp build",
-    "release": "gulp release"
+    "release": "gulp release",
+    "develop": "gulp watch",
+    "test": "http-server"
   },
   "devDependencies": {
     "angular": "^1.6.10",
