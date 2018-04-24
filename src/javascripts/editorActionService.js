@@ -51,8 +51,8 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             class: 'fa fa-list-ul',
             hotkey: 'Ctrl + -',
             callback: function(editorElement) {
-                // TODO
-                //selectionService.wrapSelectionInTag('ul');
+                htmlService.applyList('UL', editorElement);
+                return true;
             }
         }, {
             title: 'Ordered list',
@@ -60,8 +60,8 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             class: 'fa fa-list-ol',
             hotkey: 'Ctrl + 1',
             callback: function(editorElement) {
-                // TODO
-                //selectionService.wrapSelectionInTag('ol');
+                htmlService.applyList('OL', editorElement);
+                return true;
             }
         }, {
             title: 'Undo',
