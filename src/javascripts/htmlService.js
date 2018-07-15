@@ -2,11 +2,11 @@ app.service('htmlService', function(selectionService) {
     var listTagNames = ['OL', 'UL'],
         headerTagNames = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 
-    var unique = function(a, getKey) {
+    var unique = function(a, key) {
         return a.reduce(function(newArray, item) {
-            var key = getKey(item),
+            var value = item[key],
                 match = newArray.find(function(item) {
-                    return getKey(item) === key;
+                    return item[key] === value;
                 });
             if (!match) newArray.push(item);
             return newArray;
@@ -88,9 +88,7 @@ app.service('htmlService', function(selectionService) {
         var listElement = document.createElement(tagName),
             firstAncestor = groups[0].list || groups[0].block;
         firstAncestor.parentNode.insertBefore(listElement, firstAncestor);
-        unique(groups, function(g) {
-            return g.block;
-        }).forEach(function(g) {
+        unique(groups, 'block').forEach(function(g) {
             if (!isListTag(g.block))
                 return appendListItem(listElement, g.block);
             for (var i = g.block.childNodes.length - 1; i >= 0; i--)
@@ -99,9 +97,7 @@ app.service('htmlService', function(selectionService) {
     };
 
     var unwrapList = function(groups) {
-        unique(groups, function(g) {
-            return g.list;
-        }).forEach(function(g) {
+        unique(groups, 'list').forEach(function(g) {
             if (!g.list) return;
             var f = document.createDocumentFragment();
             for (var i = 0; i < g.list.childNodes.length; i++) {
@@ -120,6 +116,18 @@ app.service('htmlService', function(selectionService) {
             if (node === ancestor) return;
             node = node.parentNode;
         }
+    };
+
+    var applyStyle = function(node, style) {
+        var styleKeys = Object.keys(style);
+        styleKeys.forEach(function(key) {
+            node.style[key] = null;
+        });
+        var computedStyle = getComputedStyle(node);
+        styleKeys.forEach(function(key) {
+            if (computedStyle[key] === style[key]) return;
+            node.style[key] = style[key];
+        });
     };
 
     var tagNameTest = function(tagNames) {
@@ -143,7 +151,18 @@ app.service('htmlService', function(selectionService) {
         (anyNotInTag ? wrap : unwrap)(groups, tagName, editorElement);
     };
 
-    this.applyStyle = function(style, editorElement) {
+    this.applyBlockStyle = function(style, editorElement) {
+        var groups = selectionService.getSelections(),
+            isBlockTag = tagNameTest(['DIV', 'P', 'UL', 'OL']);
+        groups.forEach(function(g) {
+            g.block = getAncestorTag(g.ancestor, editorElement, isBlockTag);
+        });
+        unique(groups, 'block').forEach(function(g) {
+            applyStyle(g.block, style);
+        });
+    };
+
+    this.applyInlineStyle = function(style, editorElement) {
         var groups = selectionService.getSelections();
         // TODO
     };
@@ -160,6 +179,14 @@ app.service('htmlService', function(selectionService) {
         (anyNotInList ? wrapList : unwrapList)(groups, tagName, editorElement);
     };
 
+    this.indent = function(editorElement) {
+
+    };
+
+    this.dedent = function(editorElement) {
+
+    };
+
     this.applyHeader = function(tagName, editorElement) {
         var groups = selectionService.getSelections(),
             isBlockTag = tagNameTest(['P']),
@@ -169,9 +196,7 @@ app.service('htmlService', function(selectionService) {
                 getAncestorTag(g.ancestor, editorElement, isBlockTag) ||
                 (g.ancestor.nodeType === 3 && g.ancestor);
         });
-        unique(groups, function(g) {
-            return g.tag;
-        }).forEach(function(g) {
+        unique(groups, 'tag').forEach(function(g) {
             if (!g.tag) return;
             createHeader(tagName, g.tag);
         });

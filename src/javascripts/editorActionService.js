@@ -40,6 +40,7 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             title: 'Strikethrough',
             display: 'button',
             class: 'fa fa-strikethrough',
+            // Ctrl + S saves page and Ctrl + T opens new tab in browser
             hotkey: 'Ctrl + Alt + T',
             callback: function(editorElement) {
                 htmlService.applyTag('S', editorElement);
@@ -63,7 +64,7 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
                 htmlService.applyList('OL', editorElement);
                 return true;
             }
-        }, {
+        }, /*{
             title: 'Undo',
             display: 'button',
             class: 'fa fa-undo',
@@ -79,13 +80,14 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             callback: function(editorElement) {
                 // TODO
             }
-        }, {
+        },*/ {
             title: 'Clear formatting',
             display: 'button',
             class: 'fa fa-ban',
             hotkey: 'Ctrl + Del',
             callback: function(editorElement) {
-                // TODO
+                htmlService.clearFormatting(editorElement);
+                return true;
             }
         }]
     };
@@ -97,7 +99,10 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             class: 'fa fa-align-left',
             hotkey: 'Ctrl + Shift + L',
             callback: function(editorElement) {
-                // TODO
+                htmlService.applyBlockStyle({
+                    "text-align": "left"
+                }, editorElement);
+                return true;
             }
         }, {
             title: 'Align center',
@@ -105,7 +110,10 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             class: 'fa fa-align-center',
             hotkey: 'Ctrl + Shift + C',
             callback: function(editorElement) {
-                // TODO
+                htmlService.applyBlockStyle({
+                    "text-align": "center"
+                }, editorElement);
+                return true;
             }
         }, {
             title: 'Align right',
@@ -113,7 +121,10 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             class: 'fa fa-align-right',
             hotkey: 'Ctrl + Shift + R',
             callback: function(editorElement) {
-                // TODO
+                htmlService.applyBlockStyle({
+                    "text-align": "right"
+                }, editorElement);
+                return true;
             }
         }, {
             title: 'Justify',
@@ -121,23 +132,28 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             class: 'fa fa-align-justify',
             hotkey: 'Ctrl + Shift + J',
             callback: function(editorElement) {
-                // TODO
+                htmlService.applyBlockStyle({
+                    "text-align": "justify"
+                }, editorElement);
+                return true;
             }
         }, {
             title: 'Increase indent',
             display: 'button',
             class: 'fa fa-indent',
-            hotkey: 'Tab', // NOTE: ignore if additional modifiers pressed
+            hotkey: 'Tab',
             callback: function(editorElement) {
-                // TODO
+                htmlService.indent(editorElement);
+                return true;
             }
         }, {
             title: 'Decrease indent',
             display: 'button',
             class: 'fa fa-dedent',
-            hotkey: 'Shift + Tab', // NOTE: ignore if additional modifiers pressed
+            hotkey: 'Shift + Tab',
             callback: function(editorElement) {
-                // TODO
+                htmlService.dedent(editorElement);
+                return true;
             }
         }]
     };
@@ -152,7 +168,7 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
                 // TODO
             }
         }, {
-            title: 'Insert image',
+            title: 'Insert / edit image',
             display: 'button',
             class: 'fa fa-image',
             hotkey: 'Ctrl + I',
@@ -168,7 +184,7 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
                 // TODO
             }
         },  {
-            title: 'Insert video',
+            title: 'Insert / edit video',
             display: 'button',
             class: 'fa fa-youtube-play',
             hotkey: 'Ctrl + Alt + V',
