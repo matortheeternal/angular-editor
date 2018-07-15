@@ -22,7 +22,7 @@ app.controller('editorDropdownController', function($scope) {
     };
 
     // event handlers
-    $scope.$watch('selectedItem', function() {
+    $scope.$watch('action.activeItem', function() {
         $scope.$parent.selectChanged($scope.action);
     });
 

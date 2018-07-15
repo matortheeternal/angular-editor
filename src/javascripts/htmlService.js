@@ -1,5 +1,6 @@
 app.service('htmlService', function(selectionService) {
-    var listTagNames = ['OL', 'UL'];
+    var listTagNames = ['OL', 'UL'],
+        headerTagNames = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 
     var unique = function(a, getKey) {
         return a.reduce(function(newArray, item) {
@@ -76,6 +77,13 @@ app.service('htmlService', function(selectionService) {
         item.remove();
     };
 
+    var createHeader = function(tagName, tag) {
+        var headerItem = document.createElement(tagName);
+        headerItem.innerText = tag.innerText;
+        tag.parentNode.insertBefore(headerItem, tag);
+        tag.remove();
+    };
+
     var wrapList = function(groups, tagName) {
         var listElement = document.createElement(tagName),
             firstAncestor = groups[0].list || groups[0].block;
@@ -150,6 +158,23 @@ app.service('htmlService', function(selectionService) {
             if (!g.list || g.list.tagName !== tagName) anyNotInList = true;
         });
         (anyNotInList ? wrapList : unwrapList)(groups, tagName, editorElement);
+    };
+
+    this.applyHeader = function(tagName, editorElement) {
+        var groups = selectionService.getSelections(),
+            isBlockTag = tagNameTest(['P']),
+            isHeaderTag = tagNameTest(headerTagNames);
+        groups.forEach(function(g) {
+            g.tag = getAncestorTag(g.ancestor, editorElement, isHeaderTag) ||
+                getAncestorTag(g.ancestor, editorElement, isBlockTag) ||
+                (g.ancestor.nodeType === 3 && g.ancestor);
+        });
+        unique(groups, function(g) {
+            return g.tag;
+        }).forEach(function(g) {
+            if (!g.tag) return;
+            createHeader(tagName, g.tag);
+        });
     };
 
     this.clearFormatting = function(editorElement) {

@@ -66,8 +66,8 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
     };
 
     $scope.selectChanged = function(action) {
-        if (!action.activeOption) return;
-        action.activeOption.callback($scope.editor);
+        if (!action.activeItem) return;
+        action.activeItem.apply($scope.editor);
     };
 
     // event handlers
