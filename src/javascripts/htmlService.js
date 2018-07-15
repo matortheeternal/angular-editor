@@ -1,6 +1,17 @@
 app.service('htmlService', function(selectionService) {
     var listTagNames = ['OL', 'UL'];
 
+    var unique = function(a, getKey) {
+        return a.reduce(function(newArray, item) {
+            var key = getKey(item),
+                match = newArray.find(function(item) {
+                    return getKey(item) === key;
+                });
+            if (!match) newArray.push(item);
+            return newArray;
+        }, []);
+    };
+
     var combineTag = function(html, sibling, tagName, method) {
         if (!sibling || sibling.tagName !== tagName) return;
         html[method](sibling.innerHTML);
@@ -67,81 +78,89 @@ app.service('htmlService', function(selectionService) {
 
     var wrapList = function(groups, tagName) {
         var listElement = document.createElement(tagName),
-            firstAncestor = groups[0].ancestor;
+            firstAncestor = groups[0].list || groups[0].ancestor;
         firstAncestor.parentNode.insertBefore(listElement, firstAncestor);
-        groups.forEach(function(g) {
-            if (listTagNames.indexOf(g.ancestor.tagName) === -1)
+        unique(groups, function(g) {
+            return g.ancestor;
+        }).forEach(function(g) {
+            if (!isListTag(g.ancestor))
                 return appendListItem(listElement, g.ancestor);
-            while (g.ancestor.childNodes.length > 0)
-                listElement.appendChild(g.ancestor.childNodes[0]);
-            g.ancestor.remove();
+            for (var i = g.ancestor.childNodes.length - 1; i >= 0; i--)
+                appendListItem(listElement, g.ancestor.childNodes[i]);
         });
     };
 
     var unwrapList = function(groups) {
-        groups.forEach(function(g) {
-            if (!g.ancestor.parentNode) return;
+        unique(groups, function(g) {
+            return g.list;
+        }).forEach(function(g) {
+            if (!g.list) return;
             var f = document.createDocumentFragment();
-            for (var i = 0; i < g.ancestor.childNodes.length; i++) {
+            for (var i = 0; i < g.list.childNodes.length; i++) {
                 var p = document.createElement('P');
-                p.innerHTML = g.ancestor.childNodes[i].innerHTML;
+                p.innerHTML = g.list.childNodes[i].innerHTML;
                 f.appendChild(p);
             }
-            g.ancestor.parentNode.insertBefore(f, g.ancestor);
-            g.ancestor.remove();
+            g.list.parentNode.insertBefore(f, g.list);
+            g.list.remove();
         });
     };
 
-    var getAncestorTag = function(node, ancestor, tagNames) {
+    var getAncestorTag = function(node, ancestor, test) {
         while (node) {
-            if (tagNames.index(node.tagName) > -1) return node;
+            if (test(node)) return node;
             if (node === ancestor) return;
             node = node.parentNode;
         }
     };
 
-    var getTrueAncestor = function(group, editorElement, tagNames) {
+    var tagNameTest = function(tagNames) {
+        return function(node) {
+            return tagNames.indexOf(node.tagName) > -1;
+        }
+    };
+
+    var isListTag = tagNameTest(listTagNames);
+
+    var getTrueAncestor = function(group, editorElement, test) {
         if (group.ancestor.nodeType === 3)
             group.ancestor = group.ancestor.parentNode;
-        var listTag = getAncestorTag(group.ancestor, editorElement, tagNames);
-        if (listTag) group.ancestor = listTag;
+        var a = getAncestorTag(group.ancestor, editorElement, test);
+        if (a) group.ancestor = a;
     };
 
     this.applyTag = function(tagName, editorElement) {
         var groups = selectionService.getSelections(),
-            anyNotInTag = false;
+            anyNotInTag = false,
+            test = tagNameTest([tagName]);
         groups.forEach(function(g) {
             g.selections.forEach(function(s) {
-                s.target = getAncestorTag(s.node, editorElement, [tagName]);
+                s.target = getAncestorTag(s.node, editorElement, test);
                 if (!s.target) anyNotInTag = true;
             });
         });
         (anyNotInTag ? wrap : unwrap)(groups, tagName, editorElement);
     };
 
-    // find parent containers, toggle style on them
     this.applyStyle = function(style, editorElement) {
         var groups = selectionService.getSelections();
         // TODO
     };
 
-    // find parent containers, wrap them in tagName
-    // change parent containers to LI
     this.applyList = function(tagName, editorElement) {
         var groups = selectionService.getSelections(),
-            anyNotInList = false;
+            anyNotInList = false,
+            isBlockTag = tagNameTest(['DIV', 'P', 'UL', 'OL', 'LI']);
         groups.forEach(function(g) {
-            getTrueAncestor(g, editorElement, listTagNames);
-            g.selections.forEach(function(s) {
-                s.target = getAncestorTag(s.node, editorElement, [tagName]);
-                if (!s.target) anyNotInList = true;
-            });
+            getTrueAncestor(g, editorElement, isBlockTag);
+            g.list = getAncestorTag(g.ancestor, editorElement, isListTag);
+            if (!g.list || g.list.tagName !== tagName) anyNotInList = true;
         });
         (anyNotInList ? wrapList : unwrapList)(groups, tagName, editorElement);
     };
 
     this.clearFormatting = function(editorElement) {
         var groups = selectionService.getSelections();
-        // TODO
+        // TODO: extract text nodes and put them in paragraph elements
     };
 });
