@@ -78,15 +78,15 @@ app.service('htmlService', function(selectionService) {
 
     var wrapList = function(groups, tagName) {
         var listElement = document.createElement(tagName),
-            firstAncestor = groups[0].list || groups[0].ancestor;
+            firstAncestor = groups[0].list || groups[0].block;
         firstAncestor.parentNode.insertBefore(listElement, firstAncestor);
         unique(groups, function(g) {
-            return g.ancestor;
+            return g.block;
         }).forEach(function(g) {
-            if (!isListTag(g.ancestor))
-                return appendListItem(listElement, g.ancestor);
-            for (var i = g.ancestor.childNodes.length - 1; i >= 0; i--)
-                appendListItem(listElement, g.ancestor.childNodes[i]);
+            if (!isListTag(g.block))
+                return appendListItem(listElement, g.block);
+            for (var i = g.block.childNodes.length - 1; i >= 0; i--)
+                appendListItem(listElement, g.block.childNodes[i]);
         });
     };
 
@@ -122,13 +122,6 @@ app.service('htmlService', function(selectionService) {
 
     var isListTag = tagNameTest(listTagNames);
 
-    var getTrueAncestor = function(group, editorElement, test) {
-        if (group.ancestor.nodeType === 3)
-            group.ancestor = group.ancestor.parentNode;
-        var a = getAncestorTag(group.ancestor, editorElement, test);
-        if (a) group.ancestor = a;
-    };
-
     this.applyTag = function(tagName, editorElement) {
         var groups = selectionService.getSelections(),
             anyNotInTag = false,
@@ -152,7 +145,7 @@ app.service('htmlService', function(selectionService) {
             anyNotInList = false,
             isBlockTag = tagNameTest(['DIV', 'P', 'UL', 'OL', 'LI']);
         groups.forEach(function(g) {
-            getTrueAncestor(g, editorElement, isBlockTag);
+            g.block = getAncestorTag(g.ancestor, editorElement, isBlockTag);
             g.list = getAncestorTag(g.ancestor, editorElement, isListTag);
             if (!g.list || g.list.tagName !== tagName) anyNotInList = true;
         });
