@@ -26,7 +26,8 @@ app.service('htmlService', function(selectionService, htmlHelpers) {
                 if (!s.target) anyNotInTag = true;
             });
         });
-        return (anyNotInTag ? wrap : unwrap)(groups, tagName, editorElement);
+        var method = anyNotInTag ? h.wrap : h.unwrap;
+        return method(groups, tagName, editorElement);
     };
 
     this.applyBlockStyle = function(style, editorElement) {
@@ -54,7 +55,8 @@ app.service('htmlService', function(selectionService, htmlHelpers) {
             g.list = h.getAncestorTag(g.ancestor, editorElement, isListTag);
             if (!g.list || g.list.tagName !== tagName) anyNotInList = true;
         });
-        (anyNotInList ? wrapList : unwrapList)(groups, tagName, editorElement);
+        var method = anyNotInList ? h.wrapList : h.unwrapList;
+        method(groups, tagName, editorElement);
     };
 
     this.indent = function(editorElement) {
@@ -76,7 +78,7 @@ app.service('htmlService', function(selectionService, htmlHelpers) {
         });
         unique(groups, 'tag').forEach(function(g) {
             if (!g.tag) return;
-            createHeader(tagName, g.tag);
+            h.createHeader(tagName, g.tag);
         });
     };
 
