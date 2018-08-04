@@ -3,18 +3,20 @@ app.directive('editor', function() {
         restrict: 'E',
         templateUrl: '/partials/editor.html',
         scope: {
-            text: '=?'
+            text: '=?',
+            customModals: '=?'
         },
         controller: 'editorController'
     }
 });
 
-app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, hotkeyService) {
+app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, hotkeyService, selectionService, htmlService) {
     // initialization
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;
     if (!$scope.text) $scope.text = '';
     var directiveExpr = /<!-- START DIRECTIVE -->([\s\S]*)<!-- END DIRECTIVE -->/g;
+    var focusableTags = ['IMG'];
 
     // helper function
     var processDirectives = function() {
@@ -45,8 +47,32 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         sel.addRange(range);
     };
 
+    var deleteFocusedNode = function() {
+        if (!selectionService.activeElement) return;
+        selectionService.activeElement.remove();
+        selectionService.activeElement = undefined;
+    };
+
+    var getDirectiveBlock = function(index) {
+        var blocks = $scope.editor.find('directive-block');
+        for (var i = 0; i < blocks.length; i++) {
+            var block = blocks[i];
+            if (parseInt(block.getAttribute('index')) === index)
+                return block;
+        }
+    };
+
     var loadHotkeys = function() {
-        var hotkeys = [];
+        var hotkeys = {
+            'BACKSPACE': [{
+                modifiers: {},
+                action: {callback: deleteFocusedNode}
+            }],
+            'DELETE': [{
+                modifiers: {},
+                action: {callback: deleteFocusedNode}
+            }]
+        };
         $scope.actionGroups.forEach(function(group) {
             group.actions.forEach(function(action) {
                 if (!action.hotkey) return;
@@ -56,13 +82,9 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         return hotkeys;
     };
 
-    var updateSelectionState = function() {
-        // TODO
-    };
-
     // scope functions
     $scope.invokeAction = function(action) {
-        return action.callback($scope.editor[0]);
+        return action.callback($scope.editor[0], $scope);
     };
 
     $scope.selectChanged = function(action) {
@@ -70,17 +92,29 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         action.activeItem.apply($scope.editor);
     };
 
-    // event handlers
-    $scope.onKeyUp = updateSelectionState;
-    $scope.onMouseUp = updateSelectionState;
+    $scope.addDirective = function(source) {
+        var editorEl = $scope.editor[0];
+        var dbTag = htmlService.insert('directive-block', editorEl);
+        var newIndex = $scope.directiveSources.push(source) - 1;
+        dbTag.setAttribute('index', newIndex);
+        $compile(dbTag)($scope);
+    };
+
     // inherited event handlers
     editorModalService.bind($scope);
 
+    // event handlers
     $scope.$watch('text', updateEditorHtml);
 
-    $scope.$on('escape', function(e, index) {
+    $scope.onMouseDown = function(e) {
+        if (focusableTags.indexOf(e.target.tagName) === -1)
+            return selectionService.activeElement = undefined;
+        selectionService.activeElement = e.target;
+    };
+
+    $scope.$on('escapeDirective', function(e, index) {
         e.stopPropagation();
-        var block = $scope.editor.find('directive-block')[index],
+        var block = getDirectiveBlock(index),
             nextSibling = block.nextElementSibling;
         if (!nextSibling) {
             nextSibling = document.createElement('p');
@@ -91,9 +125,9 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         focusNode(nextSibling);
     });
 
-    $scope.$on('delete', function(e, index) {
+    $scope.$on('deleteDirective', function(e, index) {
         e.stopPropagation();
-        $scope.editor.find('directive-block')[index].remove();
+        getDirectiveBlock(index).remove();
     });
 
     // initialization
