@@ -15,10 +15,11 @@ app.directive('directiveBlock', function() {
         controller: 'directiveBlockController',
         link: function(scope, element) {
             var focused = false;
+            var el = element[0];
 
             var clickHandler = function(e) {
                 if (!focused) return;
-                if (elementIsChild(e.target, element[0])) return;
+                if (elementIsChild(e.target, el)) return;
                 setFocused(false);
             };
 
@@ -26,14 +27,14 @@ app.directive('directiveBlock', function() {
                 if (focused === b) return;
                 focused = b;
                 var method = b ? 'add' : 'remove';
-                element[0].classList[method]('focused');
+                el.classList[method]('focused');
                 window[method + 'EventListener']('click', clickHandler);
             };
 
-            element[0].setAttribute('contenteditable', 'false');
-            element[0].setAttribute('tabindex', '0');
+            el.setAttribute('contenteditable', 'false');
+            el.setAttribute('tabindex', '0');
 
-            element[0].addEventListener('click', function() {
+            el.addEventListener('click', function() {
                 setFocused(true);
             });
 
@@ -49,12 +50,17 @@ app.controller('directiveBlockController', function($scope, $sce, $compile, $tim
 
     // helper functions
     var determineActiveDirective = function() {
-        var directiveElement = $scope.previewElement[0].firstElementChild,
-            tagName = directiveElement.tagName.toLowerCase();
+        var dirEl = $scope.previewElement[0].firstElementChild,
+            tagName = dirEl && dirEl.tagName.toLowerCase();
         $scope.activeDirective = $scope.directives.find(function(d) {
             foundDirective = d.tagName === tagName;
             return foundDirective;
-        });
+        }) || $scope.directives[0];
+    };
+
+    var previewHtml = function() {
+        $scope.previewElement.html($sce.trustAsHtml($scope.code).toString());
+        $compile($scope.previewElement.contents())($scope.$parent);
     };
 
     // scope functions
@@ -63,23 +69,21 @@ app.controller('directiveBlockController', function($scope, $sce, $compile, $tim
     };
 
     $scope.delete = function() {
-        $scope.$emit('delete', $scope.index);
+        $scope.$emit('deleteDirective', $scope.index);
     };
 
     $scope.escape = function() {
         $timeout(function() {
-            $scope.$emit('escape', $scope.index);
+            $scope.$emit('escapeDirective', $scope.index);
         });
     };
 
     // event handlers
     $scope.$watch('activeDirective', function() {
         if (!$scope.activeDirective) return;
-        if (foundDirective) {
-            foundDirective = false;
-        } else {
-            $scope.code = $scope.activeDirective.code;
-        }
+        if (foundDirective) return foundDirective = false;
+        $scope.code = $scope.activeDirective.code;
+        previewHtml();
     });
     
     $scope.$watch('code', function() {
@@ -88,8 +92,7 @@ app.controller('directiveBlockController', function($scope, $sce, $compile, $tim
     
     $scope.$watch('showCode', function() {
         if ($scope.showCode || !$scope.previewElement) return;
-        $scope.previewElement.html($sce.trustAsHtml($scope.code).toString());
-        $compile($scope.previewElement.contents())($scope.$parent);
+        previewHtml();
         if (!$scope.activeDirective) determineActiveDirective();
     });
 
