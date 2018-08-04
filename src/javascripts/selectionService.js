@@ -1,4 +1,6 @@
 app.service('selectionService', function() {
+    var service = this;
+
     var forEachRange = function(callback) {
         var sel = window.getSelection();
         for (var i = 0; i < sel.rangeCount; i++) {
@@ -81,9 +83,37 @@ app.service('selectionService', function() {
         };
     };
 
-    this.getSelections = function() {
+    var isDescendentOf = function(el, supposedParent) {
+        while (el) {
+            if (el === supposedParent) return true;
+            el = el.parentNode;
+        }
+    };
+
+    var getActiveSelection = function(selections) {
+        if (!service.activeElement) return;
+        selections.push({
+            ancestor: service.activeElement,
+            selections: []
+        });
+    };
+
+    this.store = function(editorElement) {
+        service.clearStore();
+        service._store = service.getSelections(editorElement);
+    };
+
+    this.clearStore = function() {
+        delete service._store;
+    };
+
+    this.getSelections = function(editorElement) {
+        if (service._store) return service._store;
         var selections = [];
+        getActiveSelection(selections);
         forEachRange(function(range) {
+            if (!isDescendentOf(range.startContainer, editorElement) ||
+                !isDescendentOf(range.endContainer, editorElement)) return;
             if (range.startContainer === range.endContainer)
                 return selections.push(simpleSelection(range));
             makeStartSelectionObjects(range, selections);
