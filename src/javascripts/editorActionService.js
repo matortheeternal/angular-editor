@@ -1,4 +1,4 @@
-app.service('editorActionService', function(editorStyleService, htmlService) {
+app.service('editorActionService', function(editorStyleService, htmlService, selectionService, youtubeService) {
     var styleGroup = {
         actions: [{
             title: 'Style',
@@ -172,32 +172,58 @@ app.service('editorActionService', function(editorStyleService, htmlService) {
             display: 'button',
             class: 'fa fa-image',
             hotkey: 'Ctrl + I',
-            callback: function(editorElement) {
-                // TODO
+            callback: function(editorEl, scope) {
+                selectionService.store(editorEl);
+                var imgTag = htmlService.getSelectedTag('IMG', editorEl);
+                scope.$emit('insertImage', imgTag, function(url) {
+                    if (!imgTag) imgTag = htmlService.insert('img');
+                    selectionService.clearStore();
+                    imgTag.setAttribute('src', url);
+                    imgTag.setAttribute('tabindex', '0');
+                });
+                return true;
             }
         }, {
             title: 'Insert / edit link',
             display: 'button',
             class: 'fa fa-link',
             hotkey: 'Ctrl + K',
-            callback: function(editorElement) {
-                // TODO
+            callback: function(editorEl, scope) {
+                selectionService.store(editorEl);
+                var aTag = htmlService.getSelectedTag('A', editorEl);
+                scope.$emit('insertLink', aTag, function(url) {
+                    if (aTag) return aTag.setAttribute('href', url);
+                    var tags = htmlService.applyTag('a', editorEl);
+                    selectionService.clearStore();
+                    tags.forEach(function(tag) {
+                        tag.setAttribute('href', url);
+                    });
+                });
+                return true;
             }
-        },  {
+        }, {
             title: 'Insert / edit video',
             display: 'button',
             class: 'fa fa-youtube-play',
             hotkey: 'Ctrl + Alt + V',
-            callback: function(editorElement) {
-                // TODO
+            callback: function(editorEl, scope) {
+                selectionService.store(editorEl);
+                scope.$emit('insertVideo', null, function(url) {
+                    var vid = youtubeService.extractVideoId(url);
+                    if (!vid) return selectionService.clearStore();
+                    var source = '<youtube video-id="' + vid + '"></youtube>';
+                    scope.addDirective(source);
+                    selectionService.clearStore();
+                });
+                return true;
             }
-        },{
+        }, {
             title: 'Insert template',
             display: 'button',
             class: 'fa fa-cube',
             hotkey: 'Ctrl + Alt + T',
-            callback: function(editorElement) {
-                // TODO
+            callback: function(editorEl, scope) {
+                scope.addDirective('');
             }
         }]
     };
