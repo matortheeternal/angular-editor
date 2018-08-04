@@ -164,8 +164,9 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             display: 'button',
             class: 'fa fa-code',
             hotkey: 'Ctrl + ~',
-            callback: function(editorElement) {
-                // TODO
+            enabled: true,
+            callback: function(editor, scope) {
+                scope.showCode = !scope.showCode;
             }
         }, {
             title: 'Insert / edit image',

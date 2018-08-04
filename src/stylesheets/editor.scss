@@ -5,7 +5,7 @@ editor {
     box-sizing: border-box;
   }
 
-  .editor {
+  .html-editor {
     border: 1px solid #eee;
     padding: 6px 12px 10px;
     text-align: left;
@@ -16,9 +16,10 @@ editor {
     }
   }
 
-  > textarea {
+  .code-editor {
     min-width: 100%;
     max-width: 100%;
     padding: 6px 12px;
+    min-height: 200px;
   }
 }

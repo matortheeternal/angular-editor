@@ -1,4 +1,6 @@
 <editor-toolbar></editor-toolbar>
-<div class="editor" contenteditable="true" store-element="editor" ng-keydown="onKeyDown($event)" ng-mousedown="onMouseDown($event)"></div>
+<div ng-hide="showCode" class="html-editor" contenteditable="true" store-element="editor" ng-keydown="onKeyDown($event)" ng-mousedown="onMouseDown($event)"></div>
+
+<textarea class="code-editor" ng-show="showCode" ng-model="text" title></textarea>
 
 <ng-include ng-if="modalOptions" src="modalOptions.templateUrl" class="modalOptions.class"></ng-include>

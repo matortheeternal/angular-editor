@@ -10,12 +10,15 @@ app.directive('editor', function() {
     }
 });
 
-app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, hotkeyService, selectionService, htmlService) {
+app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, hotkeyService, selectionService, htmlService, $timeout) {
     // initialization
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;
+    $scope.showCode = false;
     if (!$scope.text) $scope.text = '';
     var directiveExpr = /<!-- START DIRECTIVE -->([\s\S]*)<!-- END DIRECTIVE -->/g;
+    var directiveBlockExpr = /<directive-block index="(\d+)"[\s\S]*<\/directive-block>/g;
+    var ngScopeClassExpr = / class="([^"]*ng-scope[^"]*)"/g;
     var focusableTags = ['IMG'];
 
     // helper function
@@ -33,9 +36,17 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         return $sce.trustAsHtml(html).toString();
     };
 
-    var updateEditorHtml = function() {
-        $scope.editor.html(getPreviewHtml());
-        $compile($scope.editor.contents())($scope);
+    var getCodeText = function() {
+        var html = $scope.editor[0].innerHTML;
+        return html.replace(directiveBlockExpr, function(match, index) {
+            return ['<!-- START DIRECTIVE -->',
+                $scope.directiveSources[parseInt(index)],
+                '<!-- END DIRECTIVE -->'].join('\n');
+        }).replace(ngScopeClassExpr, function(match, classes) {
+            classes = classes.replace('ng-scope', '');
+            if (classes.trim() !== '') return 'class="' + classes + '"';
+            return '';
+        });
     };
 
     var focusNode = function(node) {
@@ -100,11 +111,28 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         $compile(dbTag)($scope);
     };
 
+    $scope.updateEditorHtml = function() {
+        if (!$scope.editor) return;
+        if ($scope.skipNextUpdate)
+            return delete $scope.skipNextUpdate;
+        $scope.editor.html(getPreviewHtml());
+        $compile($scope.editor.contents())($scope);
+    };
+
+    $scope.updateEditorText = function() {
+        if (!$scope.editor) return;
+        $scope.skipNextUpdate = true;
+        $scope.text = getCodeText();
+    };
+
     // inherited event handlers
     editorModalService.bind($scope);
 
     // event handlers
-    $scope.$watch('text', updateEditorHtml);
+    $scope.$watch('text', $scope.updateEditorHtml);
+    $scope.$watch('showCode', function() {
+        if ($scope.showCode) $scope.updateEditorText();
+    });
 
     $scope.onMouseDown = function(e) {
         if (focusableTags.indexOf(e.target.tagName) === -1)
