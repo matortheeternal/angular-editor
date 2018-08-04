@@ -15,7 +15,7 @@ app.service('hotkeyService', function() {
 
     this.addHotkey = function(hotkeys, action) {
         var modifiers = action.hotkey.split(' + '),
-            key = modifiers.pop();
+            key = modifiers.pop().toUpperCase();
         if (!hotkeys.hasOwnProperty(key)) hotkeys[key] = [];
         hotkeys[key].push({
             modifiers: buildModifiers(modifiers),
@@ -29,9 +29,9 @@ app.service('hotkeyService', function() {
             // TODO: IE Shim for KeyboardEvent.key
             var actions = hotkeys[e.key.toUpperCase()],
                 targetAction = actions && actions.find(function(action) {
-                    return e.shiftKey === action.modifiers.shiftKey
-                        && e.ctrlKey === action.modifiers.ctrlKey
-                        && e.altKey === action.modifiers.altKey;
+                    return e.shiftKey === !!action.modifiers.shiftKey
+                        && e.ctrlKey === !!action.modifiers.ctrlKey
+                        && e.altKey === !!action.modifiers.altKey;
                 });
             if (!targetAction) return;
             if (invokeAction(targetAction.action)) {
