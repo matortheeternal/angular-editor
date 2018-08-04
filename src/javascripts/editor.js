@@ -73,6 +73,8 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
     // event handlers
     $scope.onKeyUp = updateSelectionState;
     $scope.onMouseUp = updateSelectionState;
+    // inherited event handlers
+    editorModalService.bind($scope);
 
     $scope.$watch('text', updateEditorHtml);
 
