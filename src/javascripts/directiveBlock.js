@@ -8,7 +8,21 @@ app.directive('directiveBlock', function() {
 
     return {
         restrict: 'E',
-        templateUrl: '../../partials/directiveBlock.html',
+        template:
+        '<div class="top-bar">\n' +
+        '    <span>Directive</span>\n' +
+        '    <select ng-model="activeDirective" ng-options="item as item.name for item in directives"></select>\n' +
+        '    <button class="{{showCode ? \'preview\' : \'code\'}}" ng-click="toggleMode()" title="Toggle code / preview"></button>\n' +
+        '    <button class="escape" ng-click="escape()" title="Escape directive"></button>\n' +
+        '\n' +
+        '    <span class="delete-block" ng-click="delete()" title="Delete directive"></span>\n' +
+        '</div>\n' +
+        '<div class="content-container">\n' +
+        '    <div class="preview" ng-hide="showCode" store-element="previewElement"></div>\n' +
+        '    <div class="code" ng-show="showCode">\n' +
+        '        <textarea ng-model="code"></textarea>\n' +
+        '    </div>\n' +
+        '</div>',
         scope: {
             index: '='
         },

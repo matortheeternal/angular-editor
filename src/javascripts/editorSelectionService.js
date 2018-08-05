@@ -1,4 +1,4 @@
-app.service('selectionService', function() {
+app.service('editorSelectionService', function() {
     var service = this;
 
     var forEachRange = function(callback) {

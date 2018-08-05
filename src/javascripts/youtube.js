@@ -1,12 +1,12 @@
 app.directive('youtube', function($sce) {
-    var defaultYouTubeWidth = 854;
-    var defaultYouTubeHeight = 480;
-    var ytEmbedUrl = 'https://www.youtube.com/embed/';
+    var defaultYouTubeWidth = 854,
+        defaultYouTubeHeight = 480,
+        ytEmbedUrl = 'https://www.youtube.com/embed/';
 
     return {
         restrict: 'E',
         scope: true,
-        templateUrl: '/partials/youtube.html',
+        template: '<iframe width="{{::width}}" height="{{::height}}" ng-src="{{::url}}" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>',
         link: function(scope, element, attrs) {
             var url = ytEmbedUrl + attrs.videoId + '?rel=0';
             scope.url = $sce.trustAsResourceUrl(url);

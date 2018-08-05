@@ -1,4 +1,13 @@
-app.service('editorActionService', function(editorStyleService, htmlService, selectionService, youtubeService) {
+app.service('editorActionService', function(editorStyleService, editorHtmlService, editorSelectionService) {
+    var h = editorHtmlService,
+        s = editorSelectionService,
+        youTubeExpr = /youtube.com\/watch\?v=(\w+)/i;
+
+    var extractVideoId = function(url) {
+        var match = url.match(youTubeExpr);
+        return match && match[1];
+    };
+
     var styleGroup = {
         actions: [{
             title: 'Style',
@@ -15,7 +24,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-bold',
             hotkey: 'Ctrl + B',
             callback: function(editor) {
-                htmlService.applyTag('B', editor);
+                h.applyTag('B', editor);
                 return true;
             }
         }, {
@@ -24,7 +33,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-italic',
             hotkey: 'Ctrl + I',
             callback: function(editor) {
-                htmlService.applyTag('I', editor);
+                h.applyTag('I', editor);
                 return true;
             }
         }, {
@@ -33,7 +42,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-underline',
             hotkey: 'Ctrl + U',
             callback: function(editor) {
-                htmlService.applyTag('U', editor);
+                h.applyTag('U', editor);
                 return true;
             }
         }, {
@@ -43,7 +52,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             // Ctrl + S saves page and Ctrl + T opens new tab in browser
             hotkey: 'Ctrl + Alt + T',
             callback: function(editor) {
-                htmlService.applyTag('S', editor);
+                h.applyTag('S', editor);
                 return true;
             }
         }, {
@@ -52,7 +61,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-list-ul',
             hotkey: 'Ctrl + -',
             callback: function(editor) {
-                htmlService.applyList('UL', editor);
+                h.applyList('UL', editor);
                 return true;
             }
         }, {
@@ -61,7 +70,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-list-ol',
             hotkey: 'Ctrl + 1',
             callback: function(editor) {
-                htmlService.applyList('OL', editor);
+                h.applyList('OL', editor);
                 return true;
             }
         }, /*{
@@ -86,7 +95,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-ban',
             hotkey: 'Ctrl + Del',
             callback: function(editor) {
-                htmlService.clearFormatting(editor);
+                h.clearFormatting(editor);
                 return true;
             }
         }]
@@ -99,7 +108,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-align-left',
             hotkey: 'Ctrl + Shift + L',
             callback: function(editor) {
-                htmlService.applyBlockStyle({
+                h.applyBlockStyle({
                     "text-align": "left"
                 }, editor);
                 return true;
@@ -110,7 +119,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-align-center',
             hotkey: 'Ctrl + Shift + C',
             callback: function(editor) {
-                htmlService.applyBlockStyle({
+                h.applyBlockStyle({
                     "text-align": "center"
                 }, editor);
                 return true;
@@ -121,7 +130,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-align-right',
             hotkey: 'Ctrl + Shift + R',
             callback: function(editor) {
-                htmlService.applyBlockStyle({
+                h.applyBlockStyle({
                     "text-align": "right"
                 }, editor);
                 return true;
@@ -132,7 +141,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-align-justify',
             hotkey: 'Ctrl + Shift + J',
             callback: function(editor) {
-                htmlService.applyBlockStyle({
+                h.applyBlockStyle({
                     "text-align": "justify"
                 }, editor);
                 return true;
@@ -143,7 +152,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-indent',
             hotkey: 'Tab',
             callback: function(editor) {
-                htmlService.indent(editor);
+                h.indent(editor);
                 return true;
             }
         }, {
@@ -152,7 +161,7 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-dedent',
             hotkey: 'Shift + Tab',
             callback: function(editor) {
-                htmlService.dedent(editor);
+                h.dedent(editor);
                 return true;
             }
         }]
@@ -174,11 +183,11 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-image',
             hotkey: 'Ctrl + I',
             callback: function(editor, scope) {
-                selectionService.store(editor);
-                var imgTag = htmlService.getSelectedTag('IMG', editor);
+                s.store(editor);
+                var imgTag = h.getSelectedTag('IMG', editor);
                 scope.$emit('insertImage', imgTag, function(url) {
-                    if (!imgTag) imgTag = htmlService.insert('img');
-                    selectionService.clearStore();
+                    if (!imgTag) imgTag = h.insert('img');
+                    s.clearStore();
                     imgTag.setAttribute('src', url);
                     imgTag.setAttribute('tabindex', '0');
                 });
@@ -190,12 +199,12 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-link',
             hotkey: 'Ctrl + K',
             callback: function(editor, scope) {
-                selectionService.store(editor);
-                var aTag = htmlService.getSelectedTag('A', editor);
+                s.store(editor);
+                var aTag = h.getSelectedTag('A', editor);
                 scope.$emit('insertLink', aTag, function(url) {
                     if (aTag) return aTag.setAttribute('href', url);
-                    var tags = htmlService.applyTag('a', editor);
-                    selectionService.clearStore();
+                    var tags = h.applyTag('a', editor);
+                    s.clearStore();
                     tags.forEach(function(tag) {
                         tag.setAttribute('href', url);
                     });
@@ -208,13 +217,13 @@ app.service('editorActionService', function(editorStyleService, htmlService, sel
             class: 'fa fa-youtube-play',
             hotkey: 'Ctrl + Alt + V',
             callback: function(editor, scope) {
-                selectionService.store(editor);
+                s.store(editor);
                 scope.$emit('insertVideo', null, function(url) {
-                    var vid = youtubeService.extractVideoId(url);
-                    if (!vid) return selectionService.clearStore();
+                    var vid = extractVideoId(url);
+                    if (!vid) return s.clearStore();
                     var source = '<youtube video-id="' + vid + '"></youtube>';
                     scope.addDirective(source);
-                    selectionService.clearStore();
+                    s.clearStore();
                 });
                 return true;
             }

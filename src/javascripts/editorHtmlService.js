@@ -1,5 +1,6 @@
-app.service('htmlService', function(selectionService, htmlHelpers) {
-    var h = htmlHelpers,
+app.service('editorHtmlService', function(editorSelectionService, editorHtmlHelpers) {
+    var h = editorHtmlHelpers,
+        s = editorSelectionService,
         headerTagNames = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 
     this.applyTag = function(tagName, editorElement) {

@@ -1,4 +1,4 @@
-app.service('htmlHelpers', function() {
+app.service('editorHtmlHelpers', function() {
     var h = this,
         listTagNames = ['OL', 'UL'];
 

@@ -1,7 +1,33 @@
 app.directive('editor', function() {
     return {
         restrict: 'E',
-        templateUrl: '/partials/editor.html',
+        template:
+        '<editor-toolbar></editor-toolbar>\n' +
+        '<div ng-hide="showCode" class="html-editor" contenteditable="true" store-element="editor" ng-keydown="onKeyDown($event)" ng-mousedown="onMouseDown($event)"></div>\n' +
+        '\n' +
+        '<textarea class="code-editor" ng-show="showCode" ng-model="text" title></textarea>\n' +
+        '\n' +
+        '<div ng-if="modalOptions" class="{{modalOptions.class}}">\n' +
+        '    <div class="modal-container">\n' +
+        '        <div class="modal">\n' +
+        '            <div class="close-modal" ng-click="$emit(\'closeModal\')"></div>\n' +
+        '\n' +
+        '            <h3>{{::modalOptions.label}}</h3>\n' +
+        '\n' +
+        '            <section>\n' +
+        '                <label>\n' +
+        '                    <span class="input-label">URL</span>\n' +
+        '                    <input type="text" ng-model="modalOptions.url">\n' +
+        '                </label>\n' +
+        '            </section>\n' +
+        '\n' +
+        '            <div class="primary-actions">\n' +
+        '                <button class="action-btn" ng-click="$emit(\'applyUrl\')">OK</button>\n' +
+        '                <button class="action-btn" ng-click="$emit(\'closeModal\')">Cancel</button>\n' +
+        '            </div>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>',
         scope: {
             text: '=?',
             customModals: '=?'
@@ -10,16 +36,19 @@ app.directive('editor', function() {
     }
 });
 
-app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, hotkeyService, selectionService, htmlService, $timeout) {
+app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, editorHotkeyService, editorSelectionService, editorHtmlService) {
     // initialization
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;
     $scope.showCode = false;
     if (!$scope.text) $scope.text = '';
-    var directiveExpr = /<!-- START DIRECTIVE -->([\s\S]*)<!-- END DIRECTIVE -->/g;
-    var directiveBlockExpr = /<directive-block index="(\d+)"[\s\S]*<\/directive-block>/g;
-    var ngScopeClassExpr = / class="([^"]*ng-scope[^"]*)"/g;
-    var focusableTags = ['IMG'];
+
+    var s = editorSelectionService,
+        h = editorHtmlService,
+        directiveExpr = /<!-- START DIRECTIVE -->([\s\S]*)<!-- END DIRECTIVE -->/g,
+        directiveBlockExpr = /<directive-block index="(\d+)"[\s\S]*<\/directive-block>/g,
+        ngScopeClassExpr = / class="([^"]*ng-scope[^"]*)"/g,
+        focusableTags = ['IMG'];
 
     // helper function
     var processDirectives = function() {
@@ -59,9 +88,9 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
     };
 
     var deleteFocusedNode = function() {
-        if (!selectionService.activeElement) return;
-        selectionService.activeElement.remove();
-        selectionService.activeElement = undefined;
+        if (!s.activeElement) return;
+        s.activeElement.remove();
+        s.activeElement = undefined;
     };
 
     var getDirectiveBlock = function(index) {
@@ -87,7 +116,7 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
         $scope.actionGroups.forEach(function(group) {
             group.actions.forEach(function(action) {
                 if (!action.hotkey) return;
-                hotkeyService.addHotkey(hotkeys, action);
+                editorHotkeyService.addHotkey(hotkeys, action);
             });
         });
         return hotkeys;
@@ -105,7 +134,7 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
 
     $scope.addDirective = function(source) {
         var editorEl = $scope.editor[0];
-        var dbTag = htmlService.insert('directive-block', editorEl);
+        var dbTag = h.insert('directive-block', editorEl);
         var newIndex = $scope.directiveSources.push(source) - 1;
         dbTag.setAttribute('index', newIndex);
         $compile(dbTag)($scope);
@@ -136,8 +165,8 @@ app.controller('editorController', function($scope, $sce, $compile, editorAction
 
     $scope.onMouseDown = function(e) {
         if (focusableTags.indexOf(e.target.tagName) === -1)
-            return selectionService.activeElement = undefined;
-        selectionService.activeElement = e.target;
+            return s.activeElement = undefined;
+        s.activeElement = e.target;
     };
 
     $scope.$on('escapeDirective', function(e, index) {

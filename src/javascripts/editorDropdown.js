@@ -1,7 +1,13 @@
 app.directive('editorDropdown', function() {
     return {
         restrict: 'E',
-        templateUrl: '/partials/editorDropdown.html',
+        template:
+        '<div class="selected-item" ng-click="toggleDropdown()">\n' +
+        '    {{action.activeItem.label}}\n' +
+        '</div>\n' +
+        '<div class="dropdown" ng-show="showDropdown" title>\n' +
+        '    <div ng-repeat="item in action.options" ng-bind-html="item.preview" ng-click="selectItem(item)"></div>\n' +
+        '</div>',
         scope: {
             disabled: '='
         },
