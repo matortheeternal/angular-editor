@@ -46,7 +46,6 @@ app.service('editorStyleService', function($sce, editorHtmlService) {
         }
     }];
 
-    // TODO: Add code and quote styles?
     this.trustStyles = function() {
         service.styles.forEach(function(style) {
             style.preview = $sce.trustAsHtml(style.preview);
