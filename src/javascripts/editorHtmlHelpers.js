@@ -143,8 +143,6 @@ app.service('editorHtmlHelpers', function() {
         }
     };
 
-    this.isListTag = h.tagNameTest(listTagNames);
-
     this.insertAfter = function(refNode, newNode) {
         refNode.parentNode.insertBefore(newNode, refNode.nextSibling);
     };
@@ -168,4 +166,13 @@ app.service('editorHtmlHelpers', function() {
         });
         return refElement;
     };
+
+    this.elementIsChild = function(element, parent) {
+        while (element) {
+            if (element === parent) return true;
+            element = element.parentNode;
+        }
+    };
+
+    this.isListTag = h.tagNameTest(listTagNames);
 });

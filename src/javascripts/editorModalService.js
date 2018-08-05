@@ -6,7 +6,6 @@ app.service('editorModalService', function() {
     this.bind = function(scope) {
         var openUrlModal = function(name, tag, options) {
             scope.modalOptions = Object.assign({
-                templateUrl: service.baseUrl + '/' + 'urlModal.html',
                 label: (tag ? 'Edit ' : 'Insert ') + name,
                 class: 'edit-' + name + '-modal',
                 tag: tag

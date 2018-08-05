@@ -1,10 +1,5 @@
-app.directive('directiveBlock', function() {
-    var elementIsChild = function(element, parent) {
-        while (element) {
-            if (element === parent) return true;
-            element = element.parentNode;
-        }
-    };
+app.directive('directiveBlock', function(editorHtmlHelpers) {
+    var h = editorHtmlHelpers;
 
     return {
         restrict: 'E',
@@ -33,7 +28,7 @@ app.directive('directiveBlock', function() {
 
             var clickHandler = function(e) {
                 if (!focused) return;
-                if (elementIsChild(e.target, el)) return;
+                if (h.elementIsChild(e.target, el)) return;
                 setFocused(false);
             };
 
