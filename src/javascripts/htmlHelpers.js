@@ -1,5 +1,6 @@
 app.service('htmlHelpers', function() {
-    var h = this;
+    var h = this,
+        listTagNames = ['OL', 'UL'];
 
     var combineTag = function(html, sibling, tagName, method) {
         if (!sibling || sibling.tagName !== tagName) return;
@@ -17,6 +18,17 @@ app.service('htmlHelpers', function() {
         listItem.innerHTML = item.innerHTML;
         listElement.appendChild(listItem);
         item.remove();
+    };
+
+    this.unique = function(a, key) {
+        return a.reduce(function(newArray, item) {
+            var value = item[key],
+                match = newArray.find(function(item) {
+                    return item[key] === value;
+                });
+            if (!match) newArray.push(item);
+            return newArray;
+        }, []);
     };
 
     this.isTextNode = function(node) {
@@ -83,8 +95,8 @@ app.service('htmlHelpers', function() {
         var listElement = document.createElement(tagName),
             firstAncestor = groups[0].list || groups[0].block;
         firstAncestor.parentNode.insertBefore(listElement, firstAncestor);
-        unique(groups, 'block').forEach(function(g) {
-            if (!isListTag(g.block))
+        h.unique(groups, 'block').forEach(function(g) {
+            if (!h.isListTag(g.block))
                 return appendListItem(listElement, g.block);
             for (var i = g.block.childNodes.length - 1; i >= 0; i--)
                 appendListItem(listElement, g.block.childNodes[i]);
@@ -92,7 +104,7 @@ app.service('htmlHelpers', function() {
     };
 
     this.unwrapList = function(groups) {
-        unique(groups, 'list').forEach(function(g) {
+        h.unique(groups, 'list').forEach(function(g) {
             if (!g.list) return;
             var f = document.createDocumentFragment();
             for (var i = 0; i < g.list.childNodes.length; i++) {
@@ -130,6 +142,8 @@ app.service('htmlHelpers', function() {
             return tagNames.indexOf(node.tagName) > -1;
         }
     };
+
+    this.isListTag = h.tagNameTest(listTagNames);
 
     this.insertAfter = function(refNode, newNode) {
         refNode.parentNode.insertBefore(newNode, refNode.nextSibling);

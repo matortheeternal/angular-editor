@@ -1,20 +1,6 @@
 app.service('htmlService', function(selectionService, htmlHelpers) {
     var h = htmlHelpers,
-        listTagNames = ['OL', 'UL'],
         headerTagNames = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
-
-    var isListTag = h.tagNameTest(listTagNames);
-
-    var unique = function(a, key) {
-        return a.reduce(function(newArray, item) {
-            var value = item[key],
-                match = newArray.find(function(item) {
-                    return item[key] === value;
-                });
-            if (!match) newArray.push(item);
-            return newArray;
-        }, []);
-    };
 
     this.applyTag = function(tagName, editorElement) {
         var groups = selectionService.getSelections(editorElement),
@@ -36,7 +22,7 @@ app.service('htmlService', function(selectionService, htmlHelpers) {
         groups.forEach(function(g) {
             g.block = h.getAncestorTag(g.ancestor, editorElement, isBlockTag);
         });
-        unique(groups, 'block').forEach(function(g) {
+        h.unique(groups, 'block').forEach(function(g) {
             h.applyStyle(g.block, style);
         });
     };
@@ -52,7 +38,7 @@ app.service('htmlService', function(selectionService, htmlHelpers) {
             isBlockTag = h.tagNameTest(['DIV', 'P', 'UL', 'OL', 'LI']);
         groups.forEach(function(g) {
             g.block = h.getAncestorTag(g.ancestor, editorElement, isBlockTag);
-            g.list = h.getAncestorTag(g.ancestor, editorElement, isListTag);
+            g.list = h.getAncestorTag(g.ancestor, editorElement, h.isListTag);
             if (!g.list || g.list.tagName !== tagName) anyNotInList = true;
         });
         var method = anyNotInList ? h.wrapList : h.unwrapList;
@@ -76,7 +62,7 @@ app.service('htmlService', function(selectionService, htmlHelpers) {
                 h.getAncestorTag(g.ancestor, editorElement, isBlockTag) ||
                 (g.ancestor && h.isTextNode(g.ancestor));
         });
-        unique(groups, 'tag').forEach(function(g) {
+        h.unique(groups, 'tag').forEach(function(g) {
             if (!g.tag) return;
             h.createHeader(tagName, g.tag);
         });
@@ -105,6 +91,6 @@ app.service('htmlService', function(selectionService, htmlHelpers) {
 
     this.clearFormatting = function(editorElement) {
         var groups = selectionService.getSelections(editorElement);
-        // TODO: extract text nodes and put them in paragraph elements
+        // TODO: extract text from non-P tags
     };
 });
