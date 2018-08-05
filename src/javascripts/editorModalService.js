@@ -1,8 +1,4 @@
 app.service('editorModalService', function() {
-    var service = this;
-
-    this.baseUrl = '/partials';
-
     this.bind = function(scope) {
         var openUrlModal = function(name, tag, options) {
             scope.modalOptions = Object.assign({
