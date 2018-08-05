@@ -3,11 +3,12 @@
     <title>Angular Editor Testing</title>
     <script src="/node_modules/angular/angular.min.js"></script>
     <script src="/dist/index.js"></script>
+    <script src="/test/app.js"></script>
     <link rel="stylesheet" type="text/css" href="/node_modules/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/dist/index.css">
     <link rel="stylesheet" type="text/css" href="test.css">
 </head>
-<body ng-app="angular-editor">
+<body ng-app="test">
     <h1>Angular Editor</h1>
     <editor text="'<p>This is a test. <b>Hello World!</b></p>\n\n<!-- START DIRECTIVE -->\n<test-directive text=&quot;TESTING 123ABC&quot;>\n  <b>Saucy</b>\n</test-directive>\n<!-- END DIRECTIVE -->\n'"></editor>
 </body>

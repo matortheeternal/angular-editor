@@ -1,4 +1,4 @@
-app.directive('editor', function() {
+editor.directive('editor', function() {
     return {
         restrict: 'E',
         template:
@@ -36,7 +36,7 @@ app.directive('editor', function() {
     }
 });
 
-app.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, editorHotkeyService, editorSelectionService, editorHtmlService) {
+editor.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, editorHotkeyService, editorSelectionService, editorHtmlService) {
     // initialization
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;

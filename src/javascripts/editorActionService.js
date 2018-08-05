@@ -1,4 +1,4 @@
-app.service('editorActionService', function(editorStyleService, editorHtmlService, editorSelectionService) {
+editor.service('editorActionService', function(editorStyleService, editorHtmlService, editorSelectionService) {
     var h = editorHtmlService,
         s = editorSelectionService,
         youTubeExpr = /youtube.com\/watch\?v=(\w+)/i;

@@ -1,4 +1,4 @@
-app.directive('storeElement', function() {
+editor.directive('storeElement', function() {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {

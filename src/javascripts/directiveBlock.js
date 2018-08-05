@@ -1,4 +1,4 @@
-app.directive('directiveBlock', function(editorHtmlHelpers) {
+editor.directive('directiveBlock', function(editorHtmlHelpers) {
     var h = editorHtmlHelpers;
 
     return {
@@ -54,7 +54,7 @@ app.directive('directiveBlock', function(editorHtmlHelpers) {
     }
 });
 
-app.controller('directiveBlockController', function($scope, $sce, $compile, $timeout, directiveService) {
+editor.controller('directiveBlockController', function($scope, $sce, $compile, $timeout, directiveService) {
     var foundDirective;
 
     // helper functions

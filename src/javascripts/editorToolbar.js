@@ -1,4 +1,4 @@
-app.directive('editorToolbar', function() {
+editor.directive('editorToolbar', function() {
     return {
         restrict: 'E',
         template:

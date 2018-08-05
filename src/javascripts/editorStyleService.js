@@ -1,4 +1,4 @@
-app.service('editorStyleService', function($sce, editorHtmlService) {
+editor.service('editorStyleService', function($sce, editorHtmlService) {
     var service = this,
         h = editorHtmlService;
 

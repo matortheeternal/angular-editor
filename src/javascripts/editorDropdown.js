@@ -1,4 +1,4 @@
-app.directive('editorDropdown', function() {
+editor.directive('editorDropdown', function() {
     return {
         restrict: 'E',
         template:
@@ -15,7 +15,7 @@ app.directive('editorDropdown', function() {
     }
 });
 
-app.controller('editorDropdownController', function($scope, $element) {
+editor.controller('editorDropdownController', function($scope, $element) {
     // inherited variables
     $scope.action = $scope.$parent.action;
 

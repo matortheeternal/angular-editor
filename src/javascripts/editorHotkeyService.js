@@ -1,4 +1,4 @@
-app.service('editorHotkeyService', function() {
+editor.service('editorHotkeyService', function() {
     var sortActions = function(actions) {
         actions.sort(function(a, b) {
             return b.modifiers.length -  a.modifiers.length;

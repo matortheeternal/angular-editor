@@ -1,4 +1,4 @@
-app.directive('youtube', function($sce) {
+editor.directive('youtube', function($sce) {
     var defaultYouTubeWidth = 854,
         defaultYouTubeHeight = 480,
         ytEmbedUrl = 'https://www.youtube.com/embed/';

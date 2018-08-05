@@ -1,10 +1,10 @@
-app.service('editorHtmlService', function(editorSelectionService, editorHtmlHelpers) {
+editor.service('editorHtmlService', function(editorSelectionService, editorHtmlHelpers) {
     var h = editorHtmlHelpers,
         s = editorSelectionService,
         headerTagNames = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 
     this.applyTag = function(tagName, editorElement) {
-        var groups = selectionService.getSelections(editorElement),
+        var groups = s.getSelections(editorElement),
             anyNotInTag = false,
             test = h.tagNameTest([tagName]);
         groups.forEach(function(g) {
@@ -18,7 +18,7 @@ app.service('editorHtmlService', function(editorSelectionService, editorHtmlHelp
     };
 
     this.applyBlockStyle = function(style, editorElement) {
-        var groups = selectionService.getSelections(editorElement),
+        var groups = s.getSelections(editorElement),
             isBlockTag = h.tagNameTest(['DIV', 'P', 'UL', 'OL']);
         groups.forEach(function(g) {
             g.block = h.getAncestorTag(g.ancestor, editorElement, isBlockTag);
@@ -29,12 +29,12 @@ app.service('editorHtmlService', function(editorSelectionService, editorHtmlHelp
     };
 
     this.applyInlineStyle = function(style, editorElement) {
-        var groups = selectionService.getSelections();
+        var groups = s.getSelections();
         // TODO
     };
 
     this.applyList = function(tagName, editorElement) {
-        var groups = selectionService.getSelections(editorElement),
+        var groups = s.getSelections(editorElement),
             anyNotInList = false,
             isBlockTag = h.tagNameTest(['DIV', 'P', 'UL', 'OL', 'LI']);
         groups.forEach(function(g) {
@@ -55,7 +55,7 @@ app.service('editorHtmlService', function(editorSelectionService, editorHtmlHelp
     };
 
     this.applyHeader = function(tagName, editorElement) {
-        var groups = selectionService.getSelections(editorElement),
+        var groups = s.getSelections(editorElement),
             isBlockTag = h.tagNameTest(['P']),
             isHeaderTag = h.tagNameTest(headerTagNames);
         groups.forEach(function(g) {
@@ -70,7 +70,7 @@ app.service('editorHtmlService', function(editorSelectionService, editorHtmlHelp
     };
 
     this.getSelectedTag = function(tagName, editorElement) {
-        var groups = selectionService.getSelections(editorElement);
+        var groups = s.getSelections(editorElement);
         for (var i = 0; i < groups.length; i++) {
             var g = groups[i];
             if (g.ancestor.tagName === tagName) return g.ancestor;
@@ -82,7 +82,7 @@ app.service('editorHtmlService', function(editorSelectionService, editorHtmlHelp
     };
 
     this.insert = function(tagName, editorElement) {
-        var groups = selectionService.getSelections(editorElement);
+        var groups = s.getSelections(editorElement);
         if (groups.length === 0) return;
         var refElement = h.deleteSelection(groups),
             newElement = document.createElement(tagName);
@@ -91,7 +91,7 @@ app.service('editorHtmlService', function(editorSelectionService, editorHtmlHelp
     };
 
     this.clearFormatting = function(editorElement) {
-        var groups = selectionService.getSelections(editorElement);
+        var groups = s.getSelections(editorElement);
         // TODO: extract text from non-P tags
     };
 });

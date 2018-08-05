@@ -1,4 +1,4 @@
-app.service('editorModalService', function() {
+editor.service('editorModalService', function() {
     this.bind = function(scope) {
         var openUrlModal = function(name, tag, options) {
             scope.modalOptions = Object.assign({
