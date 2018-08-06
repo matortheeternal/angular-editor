@@ -32,18 +32,6 @@ editor.service('editorStyleService', function($sce, editorHtmlService) {
         apply: function(editorElement) {
             h.applyHeader('H4', editorElement);
         }
-    }, {
-        label: 'Heading 5',
-        preview: '<h5>Heading 5</h5>',
-        apply: function(editorElement) {
-            h.applyHeader('H5', editorElement);
-        }
-    }, {
-        label: 'Heading 6',
-        preview: '<h6>Heading 6</h6>',
-        apply: function(editorElement) {
-            h.applyHeader('H6', editorElement);
-        }
     }];
 
     this.trustStyles = function() {
