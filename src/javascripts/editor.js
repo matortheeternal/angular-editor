@@ -188,6 +188,6 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
     });
 
     // initialization
-    var buildOnKeyDown = hotkeyService.buildOnKeyDown;
+    var buildOnKeyDown = editorHotkeyService.buildOnKeyDown;
     $scope.onKeyDown = buildOnKeyDown(loadHotkeys(), $scope.invokeAction);
 });

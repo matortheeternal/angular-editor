@@ -1,9 +1,16 @@
-editor.service('editorHtmlHelpers', function() {
+editor.service('editorHtmlHelpers', function(editorSelectionService) {
     var h = this,
-        listTagNames = ['OL', 'UL'];
+        select = editorSelectionService.select,
+        listTagNames = ['OL', 'UL'],
+        combineMethods = {
+            previous: 'unshift',
+            next: 'push'
+        };
 
-    var combineTag = function(html, sibling, tagName, method) {
+    var combineTag = function(html, s, tagName, type) {
+        var sibling = s.node[type + 'Sibling'];
         if (!sibling || sibling.tagName !== tagName) return;
+        var method = combineMethods[type];
         html[method](sibling.innerHTML);
         sibling.remove();
     };
@@ -18,6 +25,39 @@ editor.service('editorHtmlHelpers', function() {
         listItem.innerHTML = item.innerHTML;
         listElement.appendChild(listItem);
         item.remove();
+    };
+
+    var setStartEnd = function(s) {
+        s.len = s.node.length;
+        if (!s.hasOwnProperty('start')) s.start = 0;
+        if (!s.hasOwnProperty('end')) s.end = s.len;
+    };
+
+    var combineTags = function(s, tagName, html) {
+        if (s.start === 0)
+            combineTag(html, s, tagName, 'previous');
+        if (s.end === s.len)
+            combineTag(html, s, tagName, 'next');
+    };
+
+    var buildWrapNode = function(s, tagName) {
+        var newNode = document.createElement(tagName);
+        html = [s.node.substringData(s.start, s.end - s.start)];
+        combineTags(s, tagName, html);
+        newNode.innerHTML = html.join('');
+        newNode.normalize();
+        return newNode;
+    };
+
+    var buildWrapFragment = function(s, newNode) {
+        var f = document.createDocumentFragment();
+        if (s.start > 0) f.appendChild(createTextNode(s.node, 0, s.start));
+        f.appendChild(newNode);
+        if (s.end < s.len) f.appendChild(createTextNode(s.node, s.end, s.len));
+        return f;
+    };
+
+    var updateSel = function(s) {
     };
 
     this.unique = function(a, key) {
@@ -39,24 +79,13 @@ editor.service('editorHtmlHelpers', function() {
         var newTags = [];
         groups.forEach(function(g) {
             g.selections.forEach(function(s) {
-                if (!h.isTextNode(s.node)) return;
-                if (s.target) return;
-                var len = s.node.length,
-                    start = s.start || 0,
-                    end = s.end || len,
-                    newNode = document.createElement(tagName),
-                    f = document.createDocumentFragment(),
-                    html = [s.node.substringData(start, end - start)];
-                if (start === 0)
-                    combineTag(html, s.node.previousSibling, tagName, 'unshift');
-                if (end === len)
-                    combineTag(html, s.node.nextSibling, tagName, 'push');
-                if (start > 0) f.appendChild(createTextNode(s.node, 0, start));
-                newNode.innerHTML = html.join('');
-                newNode.normalize();
-                f.appendChild(newNode);
-                if (end < len) f.appendChild(createTextNode(s.node, end, len));
-                s.node.replaceWith(f);
+                if (!h.isTextNode(s.node) || s.target) return;
+                setStartEnd(s);
+                var newNode = buildWrapNode(s, tagName);
+                s.node.replaceWith(buildWrapFragment(s, newNode));
+                s.node = newNode;
+                s.start = 0;
+                s.end = newNode.lastChild.length - 1;
                 newTags.push(newNode);
             });
         });
@@ -66,19 +95,31 @@ editor.service('editorHtmlHelpers', function() {
     this.unwrap = function(groups, tagName, editorElement) {
         groups.forEach(function(g) {
             g.selections.forEach(function(s) {
-                var p = s.target.parentNode;
+                var i, p = s.target.parentNode;
                 if (!p) return;
                 // TODO: Handle partial unwrapping
                 if (p === editorElement) {
                     var e = document.createElement('p');
                     e.innerHTML = s.target.innerHTML;
                     s.target.replaceWith(e);
+                    s.node = e;
+                    s.start = 0;
+                    s.end = e.lastChild.length - 1;
                 } else {
                     var f = document.createDocumentFragment();
-                    for (var i = 0; i < s.target.childNodes.length; i++)
+                    for (i = 0; i < s.target.childNodes.length; i++)
                         f.appendChild(s.target.childNodes[i]);
+                    var textNode;
+                    for (i = 0; i < p.childNodes.length; i++) {
+                        var childNode = p.childNodes[i];
+                        if (childNode === s.target) break;
+                        if (childNode.nodeType === 3) textNode = childNode;
+                    }
+                    s.start = textNode ? textNode.length : 0;
+                    s.end = s.start + f.childNodes[0].length;
                     s.target.replaceWith(f);
                     p.normalize();
+                    s.node = p.childNodes[textNode ? i - 1 : i];
                 }
             });
         });

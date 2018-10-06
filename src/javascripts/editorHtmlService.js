@@ -14,7 +14,9 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
             });
         });
         var method = anyNotInTag ? h.wrap : h.unwrap;
-        return method(groups, tagName, editorElement);
+        var newTags = method(groups, tagName, editorElement);
+        s.select(groups);
+        return newTags;
     };
 
     this.applyBlockStyle = function(style, editorElement) {
