@@ -72,13 +72,16 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
     };
 
     this.getSelectedTag = function(tagName, editorElement) {
-        var groups = s.getSelections(editorElement);
+        var groups = s.getSelections(editorElement),
+            test = h.tagNameTest([tagName]);
         for (var i = 0; i < groups.length; i++) {
-            var g = groups[i];
+            var g = groups[i],
+                tag = h.getAncestorTag(g.ancestor, editorElement, test);
+            if (tag) return tag;
             if (g.ancestor.tagName === tagName) return g.ancestor;
             for (var j = 0; j < g.selections.length; j++) {
-                var s = g.selections[j];
-                if (s.node.tagName === tagName) return s.node;
+                var sel = g.selections[j];
+                if (sel.node.tagName === tagName) return sel.node;
             }
         }
     };
