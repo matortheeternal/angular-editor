@@ -83,9 +83,9 @@ editor.service('editorHtmlHelpers', function(editorSelectionService) {
                 setStartEnd(s);
                 var newNode = buildWrapNode(s, tagName);
                 s.node.replaceWith(buildWrapFragment(s, newNode));
-                s.node = newNode;
+                s.node = newNode.firstChild;
                 s.start = 0;
-                s.end = newNode.lastChild.length - 1;
+                s.end = s.node.length;
                 newTags.push(newNode);
             });
         });
