@@ -1,6 +1,7 @@
 const fs = require('fs'),
       gulp = require('gulp'),
       clean = require('gulp-clean'),
+      rename = require('gulp-rename'),
       include = require('gulp-include'),
       watch = require('gulp-watch'),
       sass = require('gulp-sass'),
@@ -12,16 +13,20 @@ gulp.task('clean', function() {
         .pipe(clean());
 });
 
-gulp.task('build', ['clean'], function() {
+gulp.task('build', gulp.series('clean', function(done) {
     gulp.src('index.js')
+        .pipe(rename({ basename: 'angularEditor' }))
         .pipe(include())
         .on('error', console.log)
         .pipe(gulp.dest('dist'));
 
     gulp.src('index.scss')
+        .pipe(rename({ basename: 'angularEditor' }))
         .pipe(sass()).on('error', sass.logError)
         .pipe(gulp.dest('dist'));
-});
+
+    done();
+}));
 
 gulp.task('release', function() {
     // noinspection JSAnnotator
@@ -43,4 +48,4 @@ gulp.task('watch', function() {
         }));
 });
 
-gulp.task('default', ['build']);
+gulp.task('default', gulp.series('build'));
