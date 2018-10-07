@@ -1,6 +1,6 @@
 var app = angular.module('test', ['angular-editor']);
 
-app.directive('editorTestDirective', function() {
+app.directive('testDirective', function() {
     return {
         restrict: 'E',
         template: '<p>{{::text}}</p>\n<div ng-transclude></div>',
@@ -12,10 +12,10 @@ app.directive('editorTestDirective', function() {
 });
 
 app.run(function(directiveService) {
-    directiveService.availableDirectives.shift({
+    directiveService.availableDirectives.unshift({
         name: 'Test Directive',
-        tagName: 'editor-test-directive',
-        code: '<editor-test-directive text="">\n  <p>Transcluded content here</p>\n</editor-test-directive>'
+        tagName: 'test-directive',
+        code: '<test-directive text="">\n  <p>Transcluded content here</p>\n</test-directive>'
     });
 });
 

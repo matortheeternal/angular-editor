@@ -37,7 +37,7 @@ editor.directive('editor', function() {
     }
 });
 
-editor.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, editorHotkeyService, editorSelectionService, editorHtmlService) {
+editor.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, editorHotkeyService, editorSelectionService, editorHtmlService, directiveService) {
     // initialization
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;
@@ -46,7 +46,6 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
 
     var s = editorSelectionService,
         h = editorHtmlService,
-        directiveExpr = /<!-- START DIRECTIVE -->([\s\S]*)<!-- END DIRECTIVE -->/g,
         directiveBlockExpr = /<directive-block index="(\d+)"[\s\S]*<\/directive-block>/g,
         ngScopeClassExpr = / class="([^"]*ng-scope[^"]*)"/g,
         focusableTags = ['IMG'];
@@ -54,10 +53,10 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
     // helper function
     var processDirectives = function() {
         $scope.directiveSources = [];
-        return $scope.text.replace(directiveExpr, function(match, code) {
-            var index = $scope.directiveSources.push(code.trim()) - 1;
-            return '<directive-block index="' + index +
-                '"></directive-block>';
+        var directiveExpr = directiveService.buildDirectiveExpr();
+        return $scope.text.replace(directiveExpr, function(match) {
+            var index = $scope.directiveSources.push(match) - 1;
+            return '<directive-block index="' + index + '"></directive-block>';
         });
     };
 
@@ -69,9 +68,7 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
     var getCodeText = function() {
         var html = $scope.editor[0].innerHTML;
         return html.replace(directiveBlockExpr, function(match, index) {
-            return ['<!-- START DIRECTIVE -->',
-                $scope.directiveSources[parseInt(index)],
-                '<!-- END DIRECTIVE -->'].join('\n');
+            return $scope.directiveSources[parseInt(index)];
         }).replace(ngScopeClassExpr, function(match, classes) {
             classes = classes.replace('ng-scope', '');
             if (classes.trim() !== '') return 'class="' + classes + '"';
