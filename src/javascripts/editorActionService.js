@@ -1,7 +1,7 @@
 editor.service('editorActionService', function(editorStyleService, editorHtmlService, editorSelectionService) {
     var h = editorHtmlService,
         s = editorSelectionService,
-        youTubeExpr = /youtube.com\/watch\?v=(\w+)/i;
+        youTubeExpr = /youtube.com\/watch\?v=([\w\-]+)/i;
 
     var extractVideoId = function(url) {
         var match = url.match(youTubeExpr);
