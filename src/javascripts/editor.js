@@ -23,6 +23,7 @@ editor.directive('editor', function() {
         '\n' +
         '            <div class="primary-actions">\n' +
         '                <button class="action-btn" ng-click="$emit(\'applyUrl\')">OK</button>\n' +
+        '                <button class="action-btn" ng-show="modalOptions.tag && modalOptions.remove" ng-click="$emit(\'removeUrl\')">Remove</button>\n' +
         '                <button class="action-btn" ng-click="$emit(\'closeModal\')">Cancel</button>\n' +
         '            </div>\n' +
         '        </div>\n' +

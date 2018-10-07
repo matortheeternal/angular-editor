@@ -89,7 +89,7 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
     this.insert = function(tagName, editorElement) {
         var groups = s.getSelections(editorElement);
         if (groups.length === 0) return;
-        var refElement = h.deleteSelection(groups),
+        var refElement = h.deleteSelection(groups, editorElement),
             newElement = document.createElement(tagName);
         h.insertAfter(refElement, newElement);
         return newElement;

@@ -8,11 +8,12 @@ editor.service('editorModalService', function() {
             }, options);
         };
 
-        scope.$on('insertLink', function(e, tag, apply) {
+        scope.$on('insertLink', function(e, tag, apply, remove) {
             if (scope.customModals) return;
             e.stopPropagation();
             openUrlModal('link', tag, {
                 apply: apply,
+                remove: remove,
                 url: tag ? tag.href : ''
             });
         });
@@ -45,6 +46,13 @@ editor.service('editorModalService', function() {
             if (scope.customModals) return;
             e.stopPropagation();
             scope.modalOptions.apply(scope.modalOptions.url);
+            delete scope.modalOptions;
+        });
+
+        scope.$on('removeUrl', function(e) {
+            if (scope.customModals) return;
+            e.stopPropagation();
+            scope.modalOptions.remove();
             delete scope.modalOptions;
         });
     };

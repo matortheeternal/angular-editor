@@ -203,11 +203,15 @@ editor.service('editorActionService', function(editorStyleService, editorHtmlSer
                 var aTag = h.getSelectedTag('A', editor);
                 scope.$emit('insertLink', aTag, function(url) {
                     if (aTag) return aTag.setAttribute('href', url);
-                    var tags = h.applyTag('a', editor);
+                    var tags = h.applyTag('A', editor);
                     s.clearStore();
                     tags.forEach(function(tag) {
                         tag.setAttribute('href', url);
                     });
+                }, function() {
+                    if (!aTag) return;
+                    h.applyTag('A', editor);
+                    s.clearStore();
                 });
                 return true;
             }
