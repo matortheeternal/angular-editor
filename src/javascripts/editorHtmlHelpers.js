@@ -188,15 +188,19 @@ editor.service('editorHtmlHelpers', function(editorSelectionService) {
         refNode.parentNode.insertBefore(newNode, refNode.nextSibling);
     };
 
-    this.deleteSelection = function(groups) {
+    this.deleteSelection = function(groups, editorEl) {
         var refElement = groups[0].ancestor;
         groups.forEach(function(g) {
             g.selections.forEach(function(s) {
                 var start = s.node.start || 0,
-                    len = (s.node.end || s.node.length) - start,
+                    len = (s.end || s.node.length) - start,
                     parent = s.node.parentNode;
-                h.isTextNode(s.node) ? s.node.deleteData(start, len) :
+                if (parent === editorEl && s.node === refElement)
+                    refElement = refElement.previousSibling;
+                h.isTextNode(s.node) ?
+                    s.node.deleteData(start, len) :
                     s.node.remove();
+                if (parent === editorEl) return;
                 parent.normalize();
                 if (parent.innerHTML.trim() === '') {
                     if (parent === refElement || s.node === refElement)
