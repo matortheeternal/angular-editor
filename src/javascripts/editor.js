@@ -127,7 +127,7 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
 
     $scope.selectChanged = function(action) {
         if (!action.activeItem) return;
-        action.activeItem.apply($scope.editor);
+        action.activeItem.apply($scope.editor[0]);
     };
 
     $scope.addDirective = function(source) {
