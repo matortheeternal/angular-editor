@@ -32,6 +32,12 @@ editor.service('editorStyleService', function($sce, editorHtmlService) {
         apply: function(editorElement) {
             h.applyHeader('H4', editorElement);
         }
+    }, {
+        label: 'Custom Style 1',
+        preview: '<span class="custom-class-1">Custom Style 1</span>',
+        apply: function(editorElement) {
+            h.applyInlineClass('custom-class-1', editorElement);
+        }
     }];
 
     this.trustStyles = function() {

@@ -57,9 +57,6 @@ editor.service('editorHtmlHelpers', function(editorSelectionService) {
         return f;
     };
 
-    var updateSel = function(s) {
-    };
-
     this.unique = function(a, key) {
         return a.reduce(function(newArray, item) {
             var value = item[key],
@@ -79,7 +76,8 @@ editor.service('editorHtmlHelpers', function(editorSelectionService) {
         var newTags = [];
         groups.forEach(function(g) {
             g.selections.forEach(function(s) {
-                if (!h.isTextNode(s.node) || s.target) return;
+                if (!h.isTextNode(s.node)) return;
+                if (s.target) return newTags.push(s.target);
                 setStartEnd(s);
                 var newNode = buildWrapNode(s, tagName);
                 s.node.replaceWith(buildWrapFragment(s, newNode));

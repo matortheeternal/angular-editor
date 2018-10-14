@@ -1,5 +1,6 @@
 editor.service('editorHtmlService', function(editorSelectionService, editorHtmlHelpers) {
-    var h = editorHtmlHelpers,
+    var service = this,
+        h = editorHtmlHelpers,
         s = editorSelectionService,
         headerTagNames = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 
@@ -40,8 +41,17 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
     };
 
     this.applyInlineStyle = function(style, editorElement) {
-        var groups = s.getSelections();
-        // TODO
+        var newTags = service.applyTag('SPAN', editorElement);
+        newTags.forEach(function(tag) {
+            h.applyStyle(tag, style);
+        });
+        return newTags;
+    };
+
+    this.applyInlineClass = function(className, editorElement) {
+        return service.applyInlineStyle(function(tag) {
+            tag.className = className;
+        }, editorElement);
     };
 
     this.applyList = function(tagName, editorElement) {
@@ -55,6 +65,7 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
         });
         var method = anyNotInList ? h.wrapList : h.unwrapList;
         method(groups, tagName, editorElement);
+        s.select(groups);
     };
 
     this.indent = function(editorElement) {
@@ -114,6 +125,6 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
 
     this.clearFormatting = function(editorElement) {
         var groups = s.getSelections(editorElement);
-        // TODO: extract text from non-P tags
+        // TODO: clear block styles and unwrap header, SPAN, B, U, and I tags
     };
 });
