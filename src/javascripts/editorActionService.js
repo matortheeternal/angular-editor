@@ -186,7 +186,7 @@ editor.service('editorActionService', function(editorStyleService, editorHtmlSer
                 s.store(editor);
                 var imgTag = h.getSelectedTag('IMG', editor);
                 scope.$emit('insertImage', imgTag, function(url) {
-                    if (!imgTag) imgTag = h.insert('img');
+                    if (!imgTag) imgTag = h.insert('IMG', editor);
                     s.clearStore();
                     imgTag.setAttribute('src', url);
                     imgTag.setAttribute('tabindex', '0');
