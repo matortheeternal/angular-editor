@@ -6,3 +6,8 @@ body {
 test-directive {
     display: inline-block;
 }
+
+.custom-style-1 {
+    color: #f00;
+    text-decoration: underline;
+}

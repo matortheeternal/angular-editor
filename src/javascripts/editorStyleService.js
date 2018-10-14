@@ -34,9 +34,9 @@ editor.service('editorStyleService', function($sce, editorHtmlService) {
         }
     }, {
         label: 'Custom Style 1',
-        preview: '<span class="custom-class-1">Custom Style 1</span>',
+        preview: '<span class="custom-style-1">Custom Style 1</span>',
         apply: function(editorElement) {
-            h.applyInlineClass('custom-class-1', editorElement);
+            h.applyInlineClass('custom-style-1', editorElement);
         }
     }];
 
