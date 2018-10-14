@@ -167,6 +167,8 @@ editor.service('editorHtmlHelpers', function(editorSelectionService) {
     };
 
     this.applyStyle = function(node, style) {
+        if (style.constructor === Function)
+            return style(node);
         var styleKeys = Object.keys(style);
         styleKeys.forEach(function(key) {
             node.style[key] = null;

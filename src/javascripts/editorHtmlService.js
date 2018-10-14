@@ -3,6 +3,15 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
         s = editorSelectionService,
         headerTagNames = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 
+    var INDENT_SIZE = 40,
+        MAX_INDENT = 400;
+
+    var parsePixels = function(str) {
+        if (str.slice(-2) === 'px')
+            return parseInt(str.slice(0, -2));
+        return 0;
+    };
+
     this.applyTag = function(tagName, editorElement) {
         var groups = s.getSelections(editorElement),
             anyNotInTag = false,
@@ -49,11 +58,19 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
     };
 
     this.indent = function(editorElement) {
-        // TODO
+        service.applyBlockStyle(function(tag) {
+            var oldIndent = parsePixels(tag.paddingLeft),
+                newIndent = Math.max(oldIndent + INDENT_SIZE, MAX_INDENT);
+            tag.paddingLeft = newIndent + 'px';
+        }, editorElement);
     };
 
     this.dedent = function(editorElement) {
-        // TODO
+        service.applyBlockStyle(function(tag) {
+            var oldIndent = parsePixels(tag.paddingLeft),
+                newIndent = Math.min(oldIndent - INDENT_SIZE, 0);
+            tag.paddingLeft = newIndent + 'px';
+        }, editorElement);
     };
 
     this.applyHeader = function(tagName, editorElement) {
