@@ -7,6 +7,11 @@ editor.service('editorHtmlHelpers', function(editorSelectionService) {
             next: 'push'
         };
 
+    var removeEmptyStyle = function(tag) {
+        if (tag.getAttribute('style') === '')
+            tag.removeAttribute('style');
+    };
+
     var combineTag = function(html, s, tagName, type) {
         var sibling = s.node[type + 'Sibling'];
         if (!sibling || sibling.tagName !== tagName) return;
@@ -165,8 +170,11 @@ editor.service('editorHtmlHelpers', function(editorSelectionService) {
     };
 
     this.applyStyle = function(node, style) {
-        if (style.constructor === Function)
-            return style(node);
+        if (style.constructor === Function) {
+            style(node);
+            removeEmptyStyle(node);
+            return;
+        }
         var styleKeys = Object.keys(style);
         styleKeys.forEach(function(key) {
             node.style[key] = null;

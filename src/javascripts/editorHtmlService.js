@@ -8,7 +8,7 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
         MAX_INDENT = 400;
 
     var parsePixels = function(str) {
-        if (str.slice(-2) === 'px')
+        if (str && str.slice(-2) === 'px')
             return parseInt(str.slice(0, -2));
         return 0;
     };
@@ -70,17 +70,17 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
 
     this.indent = function(editorElement) {
         service.applyBlockStyle(function(tag) {
-            var oldIndent = parsePixels(tag.paddingLeft),
-                newIndent = Math.max(oldIndent + INDENT_SIZE, MAX_INDENT);
-            tag.paddingLeft = newIndent + 'px';
+            var oldIndent = parsePixels(tag.style.paddingLeft),
+                newIndent = Math.min(oldIndent + INDENT_SIZE, MAX_INDENT);
+            tag.style.paddingLeft = newIndent + 'px';
         }, editorElement);
     };
 
     this.dedent = function(editorElement) {
         service.applyBlockStyle(function(tag) {
-            var oldIndent = parsePixels(tag.paddingLeft),
-                newIndent = Math.min(oldIndent - INDENT_SIZE, 0);
-            tag.paddingLeft = newIndent + 'px';
+            var oldIndent = parsePixels(tag.style.paddingLeft),
+                newIndent = Math.max(oldIndent - INDENT_SIZE, 0);
+            tag.style.paddingLeft = newIndent ? newIndent + 'px' : null;
         }, editorElement);
     };
 
