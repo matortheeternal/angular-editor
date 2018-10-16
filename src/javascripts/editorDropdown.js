@@ -28,17 +28,18 @@ editor.controller('editorDropdownController', function($scope, $element) {
     $scope.selectItem = function(item) {
         $scope.action.activeItem = item;
         $scope.showDropdown = false;
+        $scope.$parent.selectChanged($scope.action);
     };
 
     // event handlers
-    $scope.$watch('action.activeItem', function() {
-        $scope.$parent.selectChanged($scope.action);
-    });
-
     $scope.$watch('disabled', function() {
         var classList = $element[0].classList;
         $scope.disabled ? classList.add('disabled') :
             classList.remove('disabled');
+    });
+
+    $scope.$on('dropdownCallback', function(e, cb) {
+        cb($scope);
     });
 
     // initialization

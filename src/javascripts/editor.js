@@ -162,6 +162,13 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
     });
 
     $scope.onMouseDown = function(e) {
+        $scope.$broadcast('dropdownCallback', function(scope) {
+            var action = scope.action;
+            if (action.title !== 'Style') return;
+            action.activeItem = action.options.find(function(style) {
+                return h.testStyle(e.target, $scope.editor[0], style);
+            }) || action.options[0];
+        });
         if (focusableTags.indexOf(e.target.tagName) === -1)
             return s.activeElement = undefined;
         s.activeElement = e.target;

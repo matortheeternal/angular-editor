@@ -13,6 +13,11 @@ editor.service('editorHtmlService', function(editorSelectionService, editorHtmlH
         return 0;
     };
 
+    this.testStyle = function(target, editorElement, style) {
+        if (!style.test) return;
+        return h.getAncestorTag(target, editorElement, style.test);
+    };
+
     this.applyTag = function(tagName, editorElement) {
         var groups = s.getSelections(editorElement),
             anyNotInTag = false,
