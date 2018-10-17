@@ -3,15 +3,17 @@ directive-block {
   position: relative;
   outline: none !important;
 
+  .content-container {
+    padding: 1px;
+  }
+
   &.focused {
     .top-bar {
-      visibility: visible;
+      display: inline-flex;
     }
 
     .content-container {
       outline: #4d90fe auto;
-      margin: -2px -4px;
-      padding: 2px 4px;
     }
   }
 
@@ -21,11 +23,10 @@ directive-block {
   }
 
   .top-bar {
-    display: inline-flex;
+    display: none;
     align-items: center;
     padding: 4px 4px 4px 8px;
     border: 1px solid #ccc;
-    visibility: hidden;
     background: #fff;
     position: absolute;
     z-index: 1;
