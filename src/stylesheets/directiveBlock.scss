@@ -77,7 +77,8 @@ directive-block {
     border: none;
     min-width: 100%;
     padding: 4px;
-    min-height: 60px;
+    min-height: 10px;
+    resize: none;
     outline: none !important;
   }
 }

@@ -15,7 +15,7 @@ editor.directive('directiveBlock', function(editorHtmlHelpers) {
         '<div class="content-container">\n' +
         '    <div class="preview" ng-hide="showCode" store-element="previewElement"></div>\n' +
         '    <div class="code" ng-show="showCode">\n' +
-        '        <textarea ng-model="code"></textarea>\n' +
+        '        <textarea ng-model="code" editor-autosize></textarea>\n' +
         '    </div>\n' +
         '</div>',
         scope: {
@@ -100,6 +100,7 @@ editor.controller('directiveBlockController', function($scope, $sce, $compile, $
     });
     
     $scope.$watch('showCode', function() {
+        if ($scope.showCode) $scope.$broadcast('resizeTextArea');
         if ($scope.showCode || !$scope.previewElement) return;
         previewHtml();
         if (!$scope.activeDirective) determineActiveDirective();
