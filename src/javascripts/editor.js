@@ -37,7 +37,7 @@ editor.directive('editor', function() {
     }
 });
 
-editor.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, editorHotkeyService, editorSelectionService, editorHtmlService, directiveService) {
+editor.controller('editorController', function($scope, $sce, $compile, editorActionService, editorStyleService, editorModalService, editorHotkeyService, editorSelectionService, editorHtmlService, editorHtmlHelpers, directiveService) {
     // initialization
     editorStyleService.trustStyles();
     $scope.actionGroups = editorActionService.groups;
@@ -46,6 +46,7 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
 
     var s = editorSelectionService,
         h = editorHtmlService,
+        elementIsChild = editorHtmlHelpers.elementIsChild,
         directiveBlockExpr = /<directive-block index="(\d+)"[\s\S]*<\/directive-block>/g,
         ngScopeClassExpr = / class="([^"]*ng-scope[^"]*)"/g,
         focusableTags = ['IMG'];
@@ -190,6 +191,17 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
     $scope.$on('deleteDirective', function(e, index) {
         e.stopPropagation();
         getDirectiveBlock(index).remove();
+    });
+
+    var onLinkClick = function(e) {
+        if (e.target.tagName !== 'A') return;
+        var inEditor = elementIsChild(e.target, $scope.editor[0]);
+        if (inEditor) e.preventDefault();
+    };
+
+    window.addEventListener('click', onLinkClick);
+    $scope.$on('destroy', function() {
+        window.removeEventListener('click', onLinkClick);
     });
 
     // initialization
