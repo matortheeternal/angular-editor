@@ -1,5 +1,6 @@
 editor {
   display: block;
+  overflow-x: hidden;
 
   > * {
     box-sizing: border-box;
@@ -9,7 +10,6 @@ editor {
     border: 1px solid #eee;
     padding: 6px 12px 10px;
     text-align: left;
-    overflow-x: hidden;
 
     img {
       cursor: default;
