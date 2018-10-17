@@ -47,7 +47,7 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
     var s = editorSelectionService,
         h = editorHtmlService,
         elementIsChild = editorHtmlHelpers.elementIsChild,
-        directiveBlockExpr = /<directive-block index="(\d+)"[\s\S]*<\/directive-block>/g,
+        directiveBlockExpr = /<directive-block index="(\d+)"[\s\S]*?<\/directive-block>/g,
         ngScopeClassExpr = / class="([^"]*ng-scope[^"]*)"/g,
         focusableTags = ['IMG'];
 
