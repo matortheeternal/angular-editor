@@ -15,13 +15,13 @@ gulp.task('clean', function() {
 
 gulp.task('build', gulp.series('clean', function(done) {
     gulp.src('index.js')
-        .pipe(rename({ basename: 'angularEditor' }))
+        .pipe(rename({ basename: 'angular-editor' }))
         .pipe(include())
         .on('error', console.log)
         .pipe(gulp.dest('dist'));
 
     gulp.src('index.scss')
-        .pipe(rename({ basename: 'angularEditor' }))
+        .pipe(rename({ basename: 'angular-editor' }))
         .pipe(sass()).on('error', sass.logError)
         .pipe(gulp.dest('dist'));
 
