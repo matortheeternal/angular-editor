@@ -1,4 +1,4 @@
-var app = angular.module('test', ['angular-editor']);
+var app = angular.module('test', ['angularEditor']);
 
 app.directive('testDirective', function() {
     return {
