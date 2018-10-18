@@ -20,17 +20,7 @@ app.run(function(directiveService) {
 });
 
 app.run(function(editorStyleService) {
-    editorStyleService.styles.push({
-        label: 'Heading 5',
-        preview: '<h5>Heading 5</h5>',
-        apply: function(editorElement) {
-            h.applyHeader('H5', editorElement);
-        }
-    }, {
-        label: 'Heading 6',
-        preview: '<h6>Heading 6</h6>',
-        apply: function(editorElement) {
-            h.applyHeader('H6', editorElement);
-        }
-    });
+    for (var i = 1; i <= 6; i++)
+        editorStyleService.addHeaderStyle(i);
+    editorStyleService.addInlineClassStyle('Custom Class 1', 'custom-class-1');
 });

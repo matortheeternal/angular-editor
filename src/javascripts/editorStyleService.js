@@ -8,49 +8,52 @@ editor.service('editorStyleService', function($sce, editorHtmlService, editorHtm
         apply: function(editorElement) {
             h.clearFormatting(editorElement);
         }
-    }, {
-        label: 'Heading 1',
-        preview: '<h1>Heading 1</h1>',
-        test: editorHtmlHelpers.tagNameTest(['H1']),
-        apply: function(editorElement) {
-            h.applyHeader('H1', editorElement);
-        }
-    }, {
-        label: 'Heading 2',
-        preview: '<h2>Heading 2</h2>',
-        test: editorHtmlHelpers.tagNameTest(['H2']),
-        apply: function(editorElement) {
-            h.applyHeader('H2', editorElement);
-        }
-    }, {
-        label: 'Heading 3',
-        preview: '<h3>Heading 3</h3>',
-        test: editorHtmlHelpers.tagNameTest(['H3']),
-        apply: function(editorElement) {
-            h.applyHeader('H3', editorElement);
-        }
-    }, {
-        label: 'Heading 4',
-        preview: '<h4>Heading 4</h4>',
-        test: editorHtmlHelpers.tagNameTest(['H4']),
-        apply: function(editorElement) {
-            h.applyHeader('H4', editorElement);
-        }
-    }, {
-        label: 'Custom Style 1',
-        preview: '<span class="custom-style-1">Custom Style 1</span>',
-        test: function(node) {
-            return node.tagName === 'SPAN' &&
-                node.classList.contains('custom-style-1');
-        },
-        apply: function(editorElement) {
-            h.applyInlineClass('custom-style-1', editorElement);
-        }
     }];
 
     this.trustStyles = function() {
         service.styles.forEach(function(style) {
             style.preview = $sce.trustAsHtml(style.preview);
+        });
+    };
+
+    this.addHeaderStyle = function(level) {
+        var tagName = 'H' + level,
+            label = 'Heading ' + level;
+        service.styles.push({
+            label: label,
+            preview: '<' + tagName + '>' + label  + '</' + tagName + '>',
+            test: editorHtmlHelpers.tagNameTest([tagName]),
+            apply: function(editorElement) {
+                h.applyHeader(tagName, editorElement);
+            }
+        });
+    };
+
+    this.addblockClassStyle = function(name, klass) {
+        service.styles.push({
+            name: name,
+            preview: '<div class="' + klass + '">' + name + '</div>',
+            test: function(node) {
+                return node.tagName === 'DIV' &&
+                    node.classList.contains(klass)
+            },
+            apply: function(editorElement) {
+                h.applyBlockClass(klass, editorElement);
+            }
+        });
+    };
+
+    this.addInlineClassStyle = function(name, klass) {
+        service.styles.push({
+            name: name,
+            preview: '<span class="' + klass + '">' + name + '</span>',
+            test: function(node) {
+                return node.tagName === 'SPAN' &&
+                    node.classList.contains(klass)
+            },
+            apply: function(editorElement) {
+                editorHtmlService.applyInlineClass(klass, editorElement);
+            }
         });
     };
 });
