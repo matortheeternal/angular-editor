@@ -15,14 +15,25 @@ editor.directive('editorDropdown', function() {
     }
 });
 
-editor.controller('editorDropdownController', function($scope, $element) {
+editor.controller('editorDropdownController', function($scope, $element, editorHtmlHelpers) {
     // inherited variables
     $scope.action = $scope.$parent.action;
+
+    var unfocusDropdown = function(e) {
+        var isChild = editorHtmlHelpers.elementIsChild(e.target, $element[0]);
+        if (isChild) return;
+        $scope.$applyAsync(function() {
+            $scope.showDropdown = false;
+        });
+        window.removeEventListener('click', unfocusDropdown);
+    };
 
     // scope functions
     $scope.toggleDropdown = function() {
         if ($scope.disabled) return;
         $scope.showDropdown = !$scope.showDropdown;
+        if (!$scope.showDropdown) return;
+        window.addEventListener('click', unfocusDropdown);
     };
 
     $scope.selectItem = function(item) {

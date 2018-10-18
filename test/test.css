@@ -11,3 +11,7 @@ test-directive {
     color: #f00;
     text-decoration: underline;
 }
+
+div.html-editor {
+    min-height: 400px;
+}
