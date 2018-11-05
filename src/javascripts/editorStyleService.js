@@ -12,6 +12,7 @@ editor.service('editorStyleService', function($sce, editorHtmlService, editorHtm
 
     this.trustStyles = function() {
         service.styles.forEach(function(style) {
+            if (typeof style.preview !== 'string') return;
             style.preview = $sce.trustAsHtml(style.preview);
         });
     };
