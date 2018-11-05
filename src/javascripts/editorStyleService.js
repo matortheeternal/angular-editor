@@ -29,9 +29,9 @@ editor.service('editorStyleService', function($sce, editorHtmlService, editorHtm
         });
     };
 
-    this.addblockClassStyle = function(name, klass) {
+    this.addBlockClassStyle = function(name, klass) {
         service.styles.push({
-            name: name,
+            label: name,
             preview: '<div class="' + klass + '">' + name + '</div>',
             test: function(node) {
                 return node.tagName === 'DIV' &&
@@ -45,14 +45,14 @@ editor.service('editorStyleService', function($sce, editorHtmlService, editorHtm
 
     this.addInlineClassStyle = function(name, klass) {
         service.styles.push({
-            name: name,
+            label: name,
             preview: '<span class="' + klass + '">' + name + '</span>',
             test: function(node) {
                 return node.tagName === 'SPAN' &&
                     node.classList.contains(klass)
             },
             apply: function(editorElement) {
-                editorHtmlService.applyInlineClass(klass, editorElement);
+                h.applyInlineClass(klass, editorElement);
             }
         });
     };
