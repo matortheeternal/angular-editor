@@ -49,7 +49,8 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
         elementIsChild = editorHtmlHelpers.elementIsChild,
         directiveBlockExpr = /<directive-block index="(\d+)"[\s\S]*?<\/directive-block>/g,
         ngScopeClassExpr = / class="([^"]*ng-scope[^"]*)"/g,
-        focusableTags = ['IMG'];
+        focusableTags = ['IMG'],
+        updateTextTimeout;
 
     // helper function
     var processDirectives = function() {
@@ -86,12 +87,6 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
         sel.addRange(range);
     };
 
-    var deleteFocusedNode = function() {
-        if (!s.activeElement) return;
-        s.activeElement.remove();
-        s.activeElement = undefined;
-    };
-
     var getDirectiveBlock = function(index) {
         var blocks = $scope.editor.find('directive-block');
         for (var i = 0; i < blocks.length; i++) {
@@ -99,26 +94,6 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
             if (parseInt(block.getAttribute('index')) === index)
                 return block;
         }
-    };
-
-    var loadHotkeys = function() {
-        var hotkeys = {
-            'BACKSPACE': [{
-                modifiers: {},
-                action: {callback: deleteFocusedNode}
-            }],
-            'DELETE': [{
-                modifiers: {},
-                action: {callback: deleteFocusedNode}
-            }]
-        };
-        $scope.actionGroups.forEach(function(group) {
-            group.actions.forEach(function(action) {
-                if (!action.hotkey) return;
-                editorHotkeyService.addHotkey(hotkeys, action);
-            });
-        });
-        return hotkeys;
     };
 
     // scope functions
@@ -153,8 +128,28 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
         $scope.text = getCodeText();
     };
 
+    $scope.deleteFocusedNode = function() {
+        if (!s.activeElement) return;
+        s.activeElement.remove();
+        s.activeElement = undefined;
+    };
+
+    $scope.createNewParagraph = function() {
+        if (!document.activeElement) return;
+        var p = document.createElement('P');
+        editorHtmlHelpers.insertAfter(document.activeElement, p);
+        p.focus();
+        return true;
+    };
+
+    $scope.defaultKeyPress = function() {
+        if (updateTextTimeout) clearTimeout(updateTextTimeout);
+        updateTextTimeout = setTimeout($scope.updateEditorText, 100);
+    };
+
     // inherited event handlers
     editorModalService.bind($scope);
+    editorHotkeyService.bind($scope);
 
     // event handlers
     $scope.$watch('text', $scope.updateEditorHtml);
@@ -203,8 +198,4 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
     $scope.$on('destroy', function() {
         window.removeEventListener('click', onLinkClick);
     });
-
-    // initialization
-    var buildOnKeyDown = editorHotkeyService.buildOnKeyDown;
-    $scope.onKeyDown = buildOnKeyDown(loadHotkeys(), $scope.invokeAction);
 });
