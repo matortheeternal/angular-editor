@@ -33,11 +33,11 @@ editor.service('editorHotkeyService', function() {
             'DELETE': [{
                 modifiers: {},
                 action: {callback: scope.deleteFocusedNode}
-            }]/*,
+            }],
             'ENTER': [{
                 modifiers: {},
                 action: {callback: scope.createNewParagraph}
-            }]*/
+            }]
         };
         scope.actionGroups.forEach(function(group) {
             group.actions.forEach(function(action) {

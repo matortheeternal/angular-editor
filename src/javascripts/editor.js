@@ -96,6 +96,13 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
         }
     };
 
+    var getChildOfEditor = function(node) {
+        while (node.parentNode) {
+            if (node.parentNode === $scope.editor[0]) return node;
+            node = node.parentNode;
+        }
+    };
+
     // scope functions
     $scope.invokeAction = function(action) {
         return action.callback($scope.editor[0], $scope);
@@ -135,11 +142,15 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
     };
 
     $scope.createNewParagraph = function() {
-        if (!document.activeElement) return;
-        var p = document.createElement('P');
-        editorHtmlHelpers.insertAfter(document.activeElement, p);
-        p.focus();
-        return true;
+        setTimeout(function() {
+            var sel = window.getSelection ?
+                window.getSelection() : document.selection;
+            var node = getChildOfEditor(sel.focusNode);
+            if (node.tagName === 'P') return;
+            var p = document.createElement('P');
+            p.innerHTML = node.innerHTML;
+            node.parentNode.replaceChild(p, node);
+        });
     };
 
     $scope.defaultKeyPress = function() {
