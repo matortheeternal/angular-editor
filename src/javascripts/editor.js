@@ -155,7 +155,9 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
 
     $scope.defaultKeyPress = function() {
         if (updateTextTimeout) clearTimeout(updateTextTimeout);
-        updateTextTimeout = setTimeout($scope.updateEditorText, 100);
+        updateTextTimeout = setTimeout(function() {
+            $scope.$applyAsync($scope.updateEditorText);
+        }, 500);
     };
 
     // inherited event handlers
