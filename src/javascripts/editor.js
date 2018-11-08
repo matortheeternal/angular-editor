@@ -146,7 +146,7 @@ editor.controller('editorController', function($scope, $sce, $compile, editorAct
             var sel = window.getSelection ?
                 window.getSelection() : document.selection;
             var node = getChildOfEditor(sel.focusNode);
-            if (node.tagName === 'P') return;
+            if (node.tagName !== 'DIV') return;
             var p = document.createElement('P');
             p.innerHTML = node.innerHTML;
             node.parentNode.replaceChild(p, node);
