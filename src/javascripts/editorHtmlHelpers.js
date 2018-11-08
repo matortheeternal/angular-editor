@@ -198,6 +198,10 @@ editor.service('editorHtmlHelpers', function(editorSelectionService) {
 
     this.deleteSelection = function(groups, editorEl) {
         var refElement = groups[0].ancestor;
+        if (refElement === editorEl) {
+            var index = groups[0].selections[0].end - 1;
+            return editorEl.children[index];
+        }
         groups.forEach(function(g) {
             g.selections.forEach(function(s) {
                 var start = s.node.start || 0,
